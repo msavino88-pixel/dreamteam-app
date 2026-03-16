@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* dreamteam design: sfondo chiaro, card scure, accento viola */
+    --background: 40 10% 93%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 13%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 270 50% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 12% 88%;
+    --secondary-foreground: 0 0% 13%;
+    --muted: 40 8% 88%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 270 50% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 8% 85%;
+    --input: 0 0% 20%;
+    --ring: 270 50% 55%;
+    --radius: 1rem;
+
+    /* Colori sezioni dreamteam */
+    --dt-management: #D5C8B8;
+    --dt-marketing: #D05A5A;
+    --dt-finance: #7A8B5E;
+    --dt-branding: #9B8EBD;
+    --dt-hr: #BCC8B8;
+    --dt-ai: #7B9BBF;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Scrollbar personalizzata */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(0 0% 30%);
+  border-radius: 3px;
+}
