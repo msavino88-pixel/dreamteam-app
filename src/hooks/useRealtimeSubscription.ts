@@ -34,7 +34,7 @@ export function useRealtimeSubscription() {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabase!.removeChannel(channel);
     };
   }, [qc]);
 }

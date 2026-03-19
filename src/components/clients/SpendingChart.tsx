@@ -43,7 +43,7 @@ export function SpendingChart({ spending }: SpendingChartProps) {
             <XAxis dataKey="month" className="text-xs" />
             <YAxis className="text-xs" tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
             <Tooltip
-              formatter={(value: number) => [formatCurrency(value), 'Importo']}
+              formatter={(value) => [formatCurrency(Number(value)), 'Importo']}
               contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))' }}
             />
             <Bar dataKey="amount" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />

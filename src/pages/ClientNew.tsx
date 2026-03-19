@@ -43,7 +43,7 @@ export default function ClientNew() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createClient.mutate(
-      { ...form, created_by: profile?.id, assigned_to: profile?.id },
+      { ...form, status: form.status as 'lead' | 'active' | 'inactive', created_by: profile?.id, assigned_to: profile?.id },
       { onSuccess: () => navigate('/clients') }
     );
   };
