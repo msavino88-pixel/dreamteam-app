@@ -7,12 +7,15 @@ import {
   UserCog,
   Settings,
   LogOut,
+  ClipboardList,
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Il Mio Lavoro', href: '/my-work', icon: ClipboardList },
   { name: 'Clienti', href: '/clients', icon: Users },
   { name: 'Progetti', href: '/projects', icon: FolderKanban },
   { name: 'Idee', href: '/ideas', icon: Lightbulb },
@@ -22,33 +25,44 @@ const navigation = [
 
 const roleLabels: Record<string, string> = { admin: 'Admin', manager: 'Manager', consultant: 'Consulente' };
 
-export function Sidebar() {
+interface SidebarProps {
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}
+
+export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('') || '?';
 
-  return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-[#1a1a1e] text-white flex flex-col">
-      {/* Logo dreamteam */}
-      <div className="flex items-center gap-2.5 px-6 py-6">
-        <svg viewBox="0 0 32 32" className="h-8 w-8 text-white" fill="currentColor">
-          <path d="M16 4c-2 0-4 2-5 5s-3 5-5 5c2 0 4 2 5 5s3 5 5 5c2 0 4-2 5-5s3-5 5-5c-2 0-4-2-5-5s-3-5-5-5z" opacity="0.9"/>
-          <path d="M8 2c-1 0-2 1-2.5 2.5S4 7 3 7c1 0 2 1 2.5 2.5S7 12 8 12s2-1 2.5-2.5S12 7 13 7c-1 0-2-1-2.5-2.5S9 2 8 2z" opacity="0.5"/>
-        </svg>
-        <div>
-          <span className="text-lg font-light tracking-wide">dream</span>
-          <span className="text-lg font-bold tracking-wide">team</span>
-          <p className="text-[9px] tracking-[0.2em] text-white/40 uppercase -mt-0.5">Management School</p>
+  const sidebarContent = (
+    <aside className="h-screen w-64 text-white flex flex-col" style={{ background: 'var(--sidebar-bg)' }}>
+      <div className="flex items-center justify-between px-6 py-6">
+        <div className="flex items-center gap-2.5">
+          <svg viewBox="0 0 32 32" className="h-8 w-8 text-white" fill="currentColor">
+            <path d="M16 4c-2 0-4 2-5 5s-3 5-5 5c2 0 4 2 5 5s3 5 5 5c2 0 4-2 5-5s3-5 5-5c-2 0-4-2-5-5s-3-5-5-5z" opacity="0.9"/>
+            <path d="M8 2c-1 0-2 1-2.5 2.5S4 7 3 7c1 0 2 1 2.5 2.5S7 12 8 12s2-1 2.5-2.5S12 7 13 7c-1 0-2-1-2.5-2.5S9 2 8 2z" opacity="0.5"/>
+          </svg>
+          <div>
+            <span className="text-lg font-light tracking-wide">dream</span>
+            <span className="text-lg font-bold tracking-wide">team</span>
+            <p className="text-[9px] tracking-[0.2em] text-white/40 uppercase -mt-0.5">Management School</p>
+          </div>
         </div>
+        {onMobileClose && (
+          <button onClick={onMobileClose} className="lg:hidden p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10">
+            <X className="h-5 w-5" />
+          </button>
+        )}
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 flex flex-col gap-0.5 px-3 mt-2">
+      <nav className="flex-1 flex flex-col gap-0.5 px-3 mt-2 overflow-y-auto">
         {navigation.map((item) => (
           <NavLink
             key={item.name}
             to={item.href}
             end={item.href === '/'}
+            onClick={onMobileClose}
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
@@ -64,19 +78,17 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Barra colori sezioni */}
       <div className="px-4 pb-3">
         <div className="flex gap-1.5 mb-4">
-          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-management)' }} title="Management" />
-          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-marketing)' }} title="Marketing" />
-          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-finance)' }} title="Finance" />
-          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-branding)' }} title="Branding" />
-          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-hr)' }} title="HR" />
-          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-ai)' }} title="AI" />
+          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-management)' }} />
+          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-marketing)' }} />
+          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-finance)' }} />
+          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-branding)' }} />
+          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-hr)' }} />
+          <div className="h-1.5 flex-1 rounded-full" style={{ background: 'var(--dt-ai)' }} />
         </div>
       </div>
 
-      {/* User */}
       <div className="border-t border-white/10 px-4 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] text-sm font-semibold text-white">
@@ -96,5 +108,24 @@ export function Sidebar() {
         </div>
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Desktop */}
+      <div className="hidden lg:block fixed left-0 top-0 z-40">
+        {sidebarContent}
+      </div>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onMobileClose} />
+          <div className="fixed left-0 top-0 z-50">
+            {sidebarContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

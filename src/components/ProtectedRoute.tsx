@@ -6,10 +6,10 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#1a1a1e]">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-8 w-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-          <p className="text-white/40 text-sm">Caricamento...</p>
+          <div className="h-8 w-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <p className="text-muted-foreground text-sm">Caricamento...</p>
         </div>
       </div>
     );

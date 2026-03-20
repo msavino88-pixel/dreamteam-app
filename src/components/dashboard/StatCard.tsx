@@ -14,7 +14,7 @@ interface StatCardProps {
 export function StatCard({ title, value, subtitle, icon: Icon, trend, className, accentColor }: StatCardProps) {
   return (
     <div className={cn(
-      "rounded-2xl bg-[#1a1a1e] text-white p-6 relative overflow-hidden",
+      "rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-6 relative overflow-hidden",
       className
     )}>
       {/* Accent bar */}
@@ -23,17 +23,17 @@ export function StatCard({ title, value, subtitle, icon: Icon, trend, className,
       )}
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <p className="text-sm font-medium text-white/50">{title}</p>
-          <p className="text-3xl font-bold text-white">{value}</p>
-          {subtitle && <p className="text-xs text-white/40">{subtitle}</p>}
+          <p className="text-sm font-medium text-muted-foreground">{title}</p>
+          <p className="text-3xl font-bold text-card-foreground">{value}</p>
+          {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
           {trend && (
             <p className={cn("text-xs font-medium", trend.value >= 0 ? "text-emerald-400" : "text-red-400")}>
               {trend.value >= 0 ? '+' : ''}{trend.value}% {trend.label}
             </p>
           )}
         </div>
-        <div className="rounded-xl bg-white/10 p-3">
-          <Icon className="h-5 w-5 text-white/60" />
+        <div className="rounded-xl bg-muted p-3">
+          <Icon className="h-5 w-5 text-muted-foreground" />
         </div>
       </div>
     </div>

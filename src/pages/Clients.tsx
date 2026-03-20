@@ -56,7 +56,7 @@ export default function Clients() {
         onQuickAdd={() => setFormOpen(true)}
         quickAddLabel="Nuovo Cliente"
       />
-      <div className="p-6 space-y-4">
+      <div className="p-4 md:p-6 space-y-4">
         {/* Filtri */}
         <div className="flex gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[200px] max-w-sm">

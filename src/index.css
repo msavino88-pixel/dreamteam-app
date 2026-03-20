@@ -4,27 +4,29 @@
 
 @layer base {
   :root {
-    /* dreamteam design: sfondo chiaro, card scure, accento viola */
-    --background: 40 10% 93%;
-    --foreground: 0 0% 9%;
-    --card: 0 0% 13%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 13%;
-    --popover-foreground: 0 0% 95%;
+    /* Light mode: grigio chiaro elegante con alta leggibilita */
+    --background: 220 14% 96%;
+    --foreground: 220 20% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 14%;
     --primary: 270 50% 55%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 40 12% 88%;
-    --secondary-foreground: 0 0% 13%;
-    --muted: 40 8% 88%;
-    --muted-foreground: 0 0% 45%;
+    --secondary: 220 14% 92%;
+    --secondary-foreground: 220 20% 14%;
+    --muted: 220 14% 92%;
+    --muted-foreground: 220 10% 46%;
     --accent: 270 50% 55%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 40 8% 85%;
-    --input: 0 0% 20%;
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
     --ring: 270 50% 55%;
     --radius: 1rem;
+
+    --sidebar-bg: #1a1a1e;
 
     /* Colori sezioni dreamteam */
     --dt-management: #D5C8B8;
@@ -35,13 +37,37 @@
     --dt-ai: #7B9BBF;
   }
 
+  .dark {
+    --background: 220 16% 10%;
+    --foreground: 220 14% 92%;
+    --card: 220 16% 14%;
+    --card-foreground: 220 14% 92%;
+    --popover: 220 16% 14%;
+    --popover-foreground: 220 14% 92%;
+    --primary: 270 50% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 16% 18%;
+    --secondary-foreground: 220 14% 92%;
+    --muted: 220 16% 18%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 270 50% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 20%;
+    --input: 220 13% 20%;
+    --ring: 270 50% 60%;
+
+    --sidebar-bg: #111114;
+  }
+
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -56,6 +82,6 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(0 0% 30%);
+  background: hsl(var(--muted-foreground) / 0.3);
   border-radius: 3px;
 }

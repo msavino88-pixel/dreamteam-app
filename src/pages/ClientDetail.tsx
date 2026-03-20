@@ -55,7 +55,7 @@ export default function ClientDetail() {
   return (
     <div>
       <Header title={client.company_name} />
-      <div className="p-6 space-y-6">
+      <div className="p-4 md:p-6 space-y-6">
         <Button variant="ghost" size="sm" onClick={() => navigate('/clients')}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Tutti i clienti
         </Button>
@@ -78,7 +78,7 @@ export default function ClientDetail() {
         </div>
 
         {/* Metriche KPI */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
               <Euro className="h-5 w-5 mx-auto mb-1 text-primary" />

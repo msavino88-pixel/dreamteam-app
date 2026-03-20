@@ -50,7 +50,7 @@ export default function Ideas() {
         onQuickAdd={() => setQuickAddOpen(true)}
         quickAddLabel="Nuova Idea"
       />
-      <div className="p-6 space-y-4">
+      <div className="p-4 md:p-6 space-y-4">
         <div className="flex gap-3">
           <Select
             options={statusFilterOptions}

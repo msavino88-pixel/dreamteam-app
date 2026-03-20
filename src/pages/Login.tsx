@@ -48,8 +48,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#1a1a1e] p-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center bg-[#1a1a1e] p-4 sm:p-6">
+      <div className="max-w-sm w-full">
         {/* Logo */}
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-2.5 mb-3">

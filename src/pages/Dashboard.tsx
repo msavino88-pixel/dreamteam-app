@@ -50,7 +50,7 @@ export default function Dashboard() {
   return (
     <div>
       <Header title="Dashboard" />
-      <div className="p-6 space-y-6">
+      <div className="p-4 md:p-6 space-y-6">
         {/* KPI con accenti colore sezioni dreamteam */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
@@ -82,8 +82,8 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex gap-3">
-          <Button onClick={() => navigate('/clients/new')} className="gap-2 rounded-xl bg-[#1a1a1e] hover:bg-[#2a2a2e] text-white">
+        <div className="flex flex-wrap gap-2 md:gap-3">
+          <Button onClick={() => navigate('/clients/new')} className="gap-2 rounded-xl bg-foreground hover:bg-foreground/90 text-background">
             <Plus className="h-4 w-4" /> Nuovo Cliente
           </Button>
           <Button variant="outline" onClick={() => navigate('/projects/new')} className="gap-2 rounded-xl border-foreground/15 hover:bg-white/60">
@@ -97,12 +97,12 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Progetti Recenti - dark card */}
           <div className="lg:col-span-2">
-            <div className="rounded-2xl bg-[#1a1a1e] text-white p-6">
+            <div className="rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-4 md:p-6">
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-base font-semibold text-white">Progetti Attivi</h3>
+                <h3 className="text-base font-semibold text-card-foreground">Progetti Attivi</h3>
                 <button
                   onClick={() => navigate('/projects')}
-                  className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1 transition-colors"
+                  className="text-xs text-muted-foreground hover:text-card-foreground/70 flex items-center gap-1 transition-colors"
                 >
                   Vedi tutti <ArrowRight className="h-3 w-3" />
                 </button>
@@ -117,24 +117,24 @@ export default function Dashboard() {
                   return (
                     <div
                       key={project.id}
-                      className="flex items-center gap-4 p-4 rounded-xl bg-white/5 cursor-pointer hover:bg-white/10 transition-colors"
+                      className="flex items-center gap-3 p-3 md:p-4 rounded-xl bg-muted/50 cursor-pointer hover:bg-muted transition-colors"
                       onClick={() => navigate(`/projects/${project.id}`)}
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
-                        <CheckCircle2 className="h-5 w-5 text-white/50" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
+                        <CheckCircle2 className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-white truncate">{project.name}</p>
-                        <p className="text-xs text-white/40">
+                        <p className="text-sm font-semibold text-card-foreground truncate">{project.name}</p>
+                        <p className="text-xs text-muted-foreground">
                           {client?.company_name} | {formatDate(project.end_date)}
                         </p>
                       </div>
                       <div className="w-28 space-y-1.5">
                         <div className="flex justify-between text-[11px]">
-                          <span className="text-white/40">{completed}/{projectTasks.length}</span>
-                          <span className="font-medium text-white/70">{Math.round(progress)}%</span>
+                          <span className="text-muted-foreground">{completed}/{projectTasks.length}</span>
+                          <span className="font-medium text-card-foreground/70">{Math.round(progress)}%</span>
                         </div>
-                        <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                        <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                           <div
                             className="h-full rounded-full transition-all duration-300"
                             style={{

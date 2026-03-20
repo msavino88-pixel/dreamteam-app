@@ -25,7 +25,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
     <div
       ref={ref}
       className={cn(
-        "relative z-50 w-full max-w-lg rounded-2xl bg-[#1a1a1e] text-white p-6 shadow-2xl max-h-[85vh] overflow-y-auto border-0",
+        "relative z-50 w-full max-w-lg rounded-2xl bg-card text-card-foreground p-6 shadow-2xl max-h-[85vh] overflow-y-auto border-0",
         className
       )}
       {...props}
@@ -33,7 +33,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
       {children}
       {onClose && (
         <button
-          className="absolute right-4 top-4 rounded-lg bg-white/5 p-1.5 text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+          className="absolute right-4 top-4 rounded-lg bg-muted/50 p-1.5 text-muted-foreground hover:text-card-foreground hover:bg-muted transition-colors"
           onClick={onClose}
         >
           <X className="h-4 w-4" />
@@ -49,7 +49,7 @@ function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 }
 
 function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h2 className={cn("text-lg font-semibold leading-none tracking-tight text-white", className)} {...props} />;
+  return <h2 className={cn("text-lg font-semibold leading-none tracking-tight text-card-foreground", className)} {...props} />;
 }
 
 export { Dialog, DialogContent, DialogHeader, DialogTitle };

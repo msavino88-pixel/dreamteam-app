@@ -29,26 +29,26 @@ export function ClientCard({ client, spending = [], interactions = [], users = [
 
   return (
     <div
-      className="rounded-2xl bg-[#1a1a1e] text-white p-5 cursor-pointer hover:bg-[#222226] transition-all duration-200 hover:scale-[1.01]"
+      className="rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-5 cursor-pointer hover:bg-muted/50 transition-all duration-200 hover:scale-[1.01]"
       onClick={() => navigate(`/clients/${client.id}`)}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
-            <Building2 className="h-5 w-5 text-white/60" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted">
+            <Building2 className="h-5 w-5 text-muted-foreground" />
           </div>
           <div>
-            <h3 className="font-semibold text-sm text-white">{client.company_name}</h3>
-            <p className="text-xs text-white/40">{client.contact_name}</p>
+            <h3 className="font-semibold text-sm text-card-foreground">{client.company_name}</h3>
+            <p className="text-xs text-muted-foreground">{client.contact_name}</p>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
           <div className={`h-2 w-2 rounded-full ${statusDotColors[client.status]}`} />
-          <span className="text-[11px] text-white/50">{statusLabels[client.status]}</span>
+          <span className="text-[11px] text-muted-foreground">{statusLabels[client.status]}</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 text-xs text-white/35 mb-4">
+      <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
         {client.email && (
           <div className="flex items-center gap-1.5">
             <Mail className="h-3 w-3" />
@@ -74,26 +74,26 @@ export function ClientCard({ client, spending = [], interactions = [], users = [
         )}
       </div>
 
-      <div className="flex items-center justify-between border-t border-white/10 pt-3">
+      <div className="flex items-center justify-between border-t border-border pt-3">
         <div>
-          <p className="text-[11px] text-white/30">Totale speso</p>
-          <p className="text-sm font-bold text-white">{formatCurrency(totalSpent)}</p>
+          <p className="text-[11px] text-muted-foreground">Totale speso</p>
+          <p className="text-sm font-bold text-card-foreground">{formatCurrency(totalSpent)}</p>
         </div>
         <div className="text-right">
-          <p className="text-[11px] text-white/30">Ultimo contatto</p>
+          <p className="text-[11px] text-muted-foreground">Ultimo contatto</p>
           {daysSinceContact !== null ? (
             <p className={`text-sm font-semibold ${daysSinceContact > 60 ? 'text-[#D05A5A]' : daysSinceContact > 30 ? 'text-[#D5C8B8]' : 'text-emerald-400'}`}>
               {daysSinceContact > 60 && <AlertTriangle className="inline h-3 w-3 mr-1" />}
               {daysSinceContact}gg
             </p>
           ) : (
-            <p className="text-sm text-white/20">-</p>
+            <p className="text-sm text-muted-foreground/50">-</p>
           )}
         </div>
       </div>
 
       {assignee && (
-        <div className="mt-3 flex items-center gap-1.5 text-[11px] text-white/30">
+        <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
           <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] flex items-center justify-center text-[8px] font-bold text-white">
             {assignee.full_name.split(' ').map(n => n[0]).join('')}
           </div>

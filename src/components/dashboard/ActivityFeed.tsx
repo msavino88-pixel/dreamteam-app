@@ -16,9 +16,9 @@ export function ActivityFeed() {
   const activities = allActivities.slice(0, 10);
 
   return (
-    <div className="rounded-2xl bg-[#1a1a1e] text-white p-6">
-      <h3 className="text-base font-semibold text-white flex items-center gap-2 mb-5">
-        <Activity className="h-4 w-4 text-white/50" />
+    <div className="rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-6">
+      <h3 className="text-base font-semibold text-card-foreground flex items-center gap-2 mb-5">
+        <Activity className="h-4 w-4 text-muted-foreground" />
         Attività Recenti
       </h3>
       <div className="space-y-4">
@@ -30,8 +30,8 @@ export function ActivityFeed() {
                 {user?.full_name.split(' ').map(n => n[0]).join('') || '?'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-white/80">{activity.description}</p>
-                <p className="text-[11px] text-white/30">{formatRelativeDate(activity.created_at)}</p>
+                <p className="text-sm text-card-foreground/80">{activity.description}</p>
+                <p className="text-[11px] text-muted-foreground">{formatRelativeDate(activity.created_at)}</p>
               </div>
             </div>
           );
