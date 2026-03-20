@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, Plus, X, AlertTriangle, Clock, Info, CheckCheck } from 'lucide-react';
+import { Bell, Plus, X, AlertTriangle, Clock, Info, CheckCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { GlobalSearch } from './GlobalSearch';
 import { useNotifications, type Notification } from '@/contexts/NotificationContext';
 
 interface HeaderProps {
@@ -55,13 +55,7 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
       <h1 className="text-lg md:text-xl font-semibold text-foreground">{title}</h1>
 
       <div className="flex items-center gap-2 md:gap-3">
-        <div className="relative hidden md:block">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Cerca..."
-            className="w-64 pl-9 bg-card border-border rounded-xl focus:bg-card"
-          />
-        </div>
+        <GlobalSearch />
 
         {onQuickAdd && (
           <Button size="sm" onClick={onQuickAdd} className="rounded-xl gap-1.5 bg-foreground hover:bg-foreground/90 text-background">

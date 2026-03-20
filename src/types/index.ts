@@ -146,6 +146,28 @@ export interface ActivityFeedItem {
   user?: User;
 }
 
+export type CommentEntityType = 'task' | 'project' | 'idea';
+
+export interface Comment {
+  id: string;
+  entity_type: CommentEntityType;
+  entity_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  user?: User;
+}
+
+export interface Subtask {
+  id: string;
+  task_id: string;
+  title: string;
+  completed: boolean;
+  position: number;
+  created_at: string;
+}
+
 // Metriche calcolate CRM
 export interface ClientMetrics {
   total_spent: number;

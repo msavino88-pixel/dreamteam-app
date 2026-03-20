@@ -108,13 +108,19 @@ export default function ProjectDetail() {
         {/* Task Board - dark card */}
         <div className="rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-4 md:p-6">
           <h3 className="text-base font-semibold text-card-foreground mb-4">Board Task</h3>
-          <TaskBoard tasks={tasks} onStatusChange={(taskId, newStatus) => {
-            updateTask.mutate({
-              id: taskId,
-              status: newStatus,
-              completed_at: newStatus === 'done' ? new Date().toISOString() : null,
-            });
-          }} />
+          <TaskBoard
+            tasks={tasks}
+            onStatusChange={(taskId, newStatus) => {
+              updateTask.mutate({
+                id: taskId,
+                status: newStatus,
+                completed_at: newStatus === 'done' ? new Date().toISOString() : null,
+              });
+            }}
+            onUpdateTask={(updates) => {
+              updateTask.mutate(updates);
+            }}
+          />
         </div>
       </div>
     </div>
