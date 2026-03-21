@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { useAllTasks } from '@/hooks/useTasks';
 import { useProjects } from '@/hooks/useProjects';
 import { useClients } from '@/hooks/useClients';
@@ -25,6 +25,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const prevIdsRef = useRef('');
   const { data: tasks = [] } = useAllTasks();
   const { data: projects = [] } = useProjects();
   const { data: clients = [] } = useClients();
@@ -102,11 +103,15 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       }
     });
 
-    // Preserve read state from previous notifications
-    setNotifications(prev => {
-      const readIds = new Set(prev.filter(n => n.read).map(n => n.id));
-      return generated.map(n => ({ ...n, read: readIds.has(n.id) }));
-    });
+    // Only update if notification IDs changed
+    const newIds = generated.map(n => n.id).sort().join(',');
+    if (newIds !== prevIdsRef.current) {
+      prevIdsRef.current = newIds;
+      setNotifications(prev => {
+        const readIds = new Set(prev.filter(n => n.read).map(n => n.id));
+        return generated.map(n => ({ ...n, read: readIds.has(n.id) }));
+      });
+    }
   }, [tasks, projects, clients]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
