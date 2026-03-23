@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { ClientCard } from '@/components/clients/ClientCard';
 import { ClientForm } from '@/components/clients/ClientForm';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
-import { useClients, useCreateClient } from '@/hooks/useClients';
+import { useClients, useCreateClient, useUpdateClient, useDeleteClient } from '@/hooks/useClients';
 import { useAllSpending } from '@/hooks/useSpending';
 import { useInteractions } from '@/hooks/useInteractions';
 import { useUsers } from '@/hooks/useUsers';
@@ -20,6 +21,7 @@ const statusFilterOptions = [
 ];
 
 export default function Clients() {
+  const navigate = useNavigate();
   const [formOpen, setFormOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -29,7 +31,10 @@ export default function Clients() {
   const { data: interactions = [] } = useInteractions();
   const { data: users = [] } = useUsers();
   const createClient = useCreateClient();
+  const updateClient = useUpdateClient();
+  const deleteClient = useDeleteClient();
   const { profile } = useAuth();
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const industryFilterOptions = useMemo(() => [
     { value: '', label: 'Tutti i settori' },
@@ -90,7 +95,24 @@ export default function Clients() {
         {/* Griglia clienti */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredClients.map(client => (
-            <ClientCard key={client.id} client={client} spending={spending} interactions={interactions} users={users} />
+            <ClientCard
+              key={client.id}
+              client={client}
+              spending={spending}
+              interactions={interactions}
+              users={users}
+              onEdit={(c) => navigate(`/clients/${c.id}`)}
+              onArchive={(c) => updateClient.mutate({ id: c.id, status: c.status === 'inactive' ? 'active' : 'inactive' })}
+              onDelete={(c) => {
+                if (confirmDeleteId === c.id) {
+                  deleteClient.mutate(c.id);
+                  setConfirmDeleteId(null);
+                } else {
+                  setConfirmDeleteId(c.id);
+                  setTimeout(() => setConfirmDeleteId(null), 3000);
+                }
+              }}
+            />
           ))}
         </div>
 

@@ -1,13 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import type { Client, ClientSpending, ClientInteraction, User } from '@/types';
 import { statusLabels, formatCurrency, daysSince } from '@/lib/formatting';
-import { Building2, Mail, Phone, MapPin, AlertTriangle } from 'lucide-react';
+import { DropdownMenu, DropdownItem } from '@/components/ui/dropdown-menu';
+import { Building2, Mail, Phone, MapPin, AlertTriangle, MoreVertical, Pencil, Archive, Trash2 } from 'lucide-react';
 
 interface ClientCardProps {
   client: Client;
   spending?: ClientSpending[];
   interactions?: ClientInteraction[];
   users?: User[];
+  onEdit?: (client: Client) => void;
+  onArchive?: (client: Client) => void;
+  onDelete?: (client: Client) => void;
 }
 
 const statusDotColors: Record<string, string> = {
@@ -17,7 +21,7 @@ const statusDotColors: Record<string, string> = {
   churned: 'bg-[#D05A5A]',
 };
 
-export function ClientCard({ client, spending = [], interactions = [], users = [] }: ClientCardProps) {
+export function ClientCard({ client, spending = [], interactions = [], users = [], onEdit, onArchive, onDelete }: ClientCardProps) {
   const navigate = useNavigate();
   const clientSpending = spending.filter(s => s.client_id === client.id);
   const totalSpent = clientSpending.filter(s => s.payment_status === 'paid').reduce((sum, s) => sum + s.amount, 0);
@@ -45,6 +49,13 @@ export function ClientCard({ client, spending = [], interactions = [], users = [
         <div className="flex items-center gap-1.5">
           <div className={`h-2 w-2 rounded-full ${statusDotColors[client.status]}`} />
           <span className="text-[11px] text-muted-foreground">{statusLabels[client.status]}</span>
+          {(onEdit || onArchive || onDelete) && (
+            <DropdownMenu trigger={<button className="p-1 rounded-lg hover:bg-muted transition-colors"><MoreVertical className="h-3.5 w-3.5 text-muted-foreground" /></button>}>
+              {onEdit && <DropdownItem onClick={() => onEdit(client)}><Pencil className="h-3.5 w-3.5" /> Modifica</DropdownItem>}
+              {onArchive && <DropdownItem onClick={() => onArchive(client)}><Archive className="h-3.5 w-3.5" /> {client.status === 'inactive' ? 'Riattiva' : 'Archivia'}</DropdownItem>}
+              {onDelete && <DropdownItem onClick={() => onDelete(client)} variant="danger"><Trash2 className="h-3.5 w-3.5" /> Elimina</DropdownItem>}
+            </DropdownMenu>
+          )}
         </div>
       </div>
 

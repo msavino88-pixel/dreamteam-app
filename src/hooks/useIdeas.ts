@@ -41,7 +41,6 @@ export function useVoteIdea() {
   return useMutation({
     mutationFn: async (ideaId: string) => {
       if (!supabase) throw new Error('Supabase non configurato');
-      // First get current votes
       const { data: current } = await supabase
         .from('ideas')
         .select('votes')
@@ -55,6 +54,40 @@ export function useVoteIdea() {
         .single();
       if (error) throw error;
       return data as Idea;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['ideas'] });
+    },
+  });
+}
+
+export function useUpdateIdea() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...updates }: Partial<Idea> & { id: string }) => {
+      if (!supabase) throw new Error('Supabase non configurato');
+      const { data, error } = await supabase
+        .from('ideas')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+      if (error) throw error;
+      return data as Idea;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['ideas'] });
+    },
+  });
+}
+
+export function useDeleteIdea() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!supabase) throw new Error('Supabase non configurato');
+      const { error } = await supabase.from('ideas').delete().eq('id', id);
+      if (error) throw error;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['ideas'] });

@@ -3,7 +3,8 @@ import { Header } from '@/components/layout/Header';
 import { ProjectCard } from '@/components/projects/ProjectCard';
 import { ProjectForm } from '@/components/projects/ProjectForm';
 import { Select } from '@/components/ui/select';
-import { useProjects, useCreateProject } from '@/hooks/useProjects';
+import { useNavigate } from 'react-router-dom';
+import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from '@/hooks/useProjects';
 import { useAllTasks } from '@/hooks/useTasks';
 import { useClients } from '@/hooks/useClients';
 import { useAuth } from '@/contexts/AuthContext';
@@ -23,8 +24,12 @@ export default function Projects() {
   const { data: projects = [] } = useProjects();
   const { data: tasks = [] } = useAllTasks();
   const { data: clients = [] } = useClients();
+  const navigate = useNavigate();
   const createProject = useCreateProject();
+  const updateProject = useUpdateProject();
+  const deleteProject = useDeleteProject();
   const { profile } = useAuth();
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const filteredProjects = projects.filter(p =>
     !statusFilter || p.status === statusFilter
@@ -53,7 +58,23 @@ export default function Projects() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredProjects.map(project => (
-            <ProjectCard key={project.id} project={project} tasks={tasks} clients={clients} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              tasks={tasks}
+              clients={clients}
+              onEdit={(p) => navigate(`/projects/${p.id}`)}
+              onArchive={(p) => updateProject.mutate({ id: p.id, status: p.status === 'archived' ? 'active' : 'archived' })}
+              onDelete={(p) => {
+                if (confirmDeleteId === p.id) {
+                  deleteProject.mutate(p.id);
+                  setConfirmDeleteId(null);
+                } else {
+                  setConfirmDeleteId(p.id);
+                  setTimeout(() => setConfirmDeleteId(null), 3000);
+                }
+              }}
+            />
           ))}
         </div>
       </div>

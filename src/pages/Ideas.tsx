@@ -3,7 +3,7 @@ import { Header } from '@/components/layout/Header';
 import { IdeaCard } from '@/components/ideas/IdeaCard';
 import { IdeaQuickAdd } from '@/components/ideas/IdeaQuickAdd';
 import { Select } from '@/components/ui/select';
-import { useIdeas, useCreateIdea, useVoteIdea } from '@/hooks/useIdeas';
+import { useIdeas, useCreateIdea, useVoteIdea, useUpdateIdea, useDeleteIdea } from '@/hooks/useIdeas';
 import { useUsers } from '@/hooks/useUsers';
 import { useClients } from '@/hooks/useClients';
 import { useProjects } from '@/hooks/useProjects';
@@ -33,7 +33,10 @@ export default function Ideas() {
   const { data: projects = [] } = useProjects();
   const createIdea = useCreateIdea();
   const voteIdea = useVoteIdea();
+  const updateIdea = useUpdateIdea();
+  const deleteIdea = useDeleteIdea();
   const { profile } = useAuth();
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   let filteredIdeas = ideas.filter(i => !statusFilter || i.status === statusFilter);
 
@@ -76,6 +79,19 @@ export default function Ideas() {
               key={idea.id}
               idea={idea}
               onVote={(id) => voteIdea.mutate(id)}
+              onEdit={(i) => {
+                // TODO: open edit modal
+              }}
+              onStatusChange={(i, status) => updateIdea.mutate({ id: i.id, status: status as any })}
+              onDelete={(i) => {
+                if (confirmDeleteId === i.id) {
+                  deleteIdea.mutate(i.id);
+                  setConfirmDeleteId(null);
+                } else {
+                  setConfirmDeleteId(i.id);
+                  setTimeout(() => setConfirmDeleteId(null), 3000);
+                }
+              }}
               users={users}
               clients={clients}
               projects={projects}

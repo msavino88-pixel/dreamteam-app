@@ -1,12 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import type { Project, Task, Client } from '@/types';
 import { statusLabels, priorityLabels, formatCurrency, formatDate } from '@/lib/formatting';
-import { FolderKanban, Calendar } from 'lucide-react';
+import { DropdownMenu, DropdownItem } from '@/components/ui/dropdown-menu';
+import { FolderKanban, Calendar, MoreVertical, Pencil, Archive, Trash2 } from 'lucide-react';
 
 interface ProjectCardProps {
   project: Project;
   tasks?: Task[];
   clients?: Client[];
+  onEdit?: (project: Project) => void;
+  onArchive?: (project: Project) => void;
+  onDelete?: (project: Project) => void;
 }
 
 const priorityDotColors: Record<string, string> = {
@@ -24,7 +28,7 @@ const statusBarColors: Record<string, string> = {
   archived: 'var(--dt-hr)',
 };
 
-export function ProjectCard({ project, tasks: allTasks = [], clients: allClients = [] }: ProjectCardProps) {
+export function ProjectCard({ project, tasks: allTasks = [], clients: allClients = [], onEdit, onArchive, onDelete }: ProjectCardProps) {
   const navigate = useNavigate();
   const client = allClients.find(c => c.id === project.client_id);
   const tasks = allTasks.filter(t => t.project_id === project.id);
@@ -52,6 +56,13 @@ export function ProjectCard({ project, tasks: allTasks = [], clients: allClients
         <div className="flex items-center gap-2">
           <span className="text-[11px] text-muted-foreground">{statusLabels[project.status]}</span>
           <div className={`h-2 w-2 rounded-full ${priorityDotColors[project.priority]}`} title={priorityLabels[project.priority]} />
+          {(onEdit || onArchive || onDelete) && (
+            <DropdownMenu trigger={<button className="p-1 rounded-lg hover:bg-muted transition-colors"><MoreVertical className="h-3.5 w-3.5 text-muted-foreground" /></button>}>
+              {onEdit && <DropdownItem onClick={() => onEdit(project)}><Pencil className="h-3.5 w-3.5" /> Modifica</DropdownItem>}
+              {onArchive && <DropdownItem onClick={() => onArchive(project)}><Archive className="h-3.5 w-3.5" /> {project.status === 'archived' ? 'Riattiva' : 'Archivia'}</DropdownItem>}
+              {onDelete && <DropdownItem onClick={() => onDelete(project)} variant="danger"><Trash2 className="h-3.5 w-3.5" /> Elimina</DropdownItem>}
+            </DropdownMenu>
+          )}
         </div>
       </div>
 
