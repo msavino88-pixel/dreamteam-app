@@ -53,23 +53,13 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-4">
-            <img src="/logo.svg" alt="dreamteam" className="h-16 w-16" />
+            <img src="/logo.png" alt="dreamteam" className="h-16 w-16" />
           </div>
           <div>
             <span className="text-3xl font-light tracking-wide text-white">dream</span>
             <span className="text-3xl font-bold tracking-wide text-white">team</span>
           </div>
-          <p className="text-[10px] tracking-[0.25em] text-white/25 uppercase mt-1.5">Management School</p>
-        </div>
-
-        {/* Barra colori */}
-        <div className="flex gap-1.5 mb-10 px-10">
-          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-management)' }} />
-          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-marketing)' }} />
-          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-finance)' }} />
-          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-branding)' }} />
-          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-hr)' }} />
-          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-ai)' }} />
+          <p className="text-[10px] tracking-[0.25em] text-white/25 uppercase mt-1.5">Management Finest</p>
         </div>
 
         {/* Form */}

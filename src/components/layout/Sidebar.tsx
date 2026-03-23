@@ -58,7 +58,7 @@ export function Sidebar({ mobileOpen, onMobileClose, collapsed, onToggleCollapse
               <div>
                 <span className="text-base font-light tracking-wide text-foreground">dream</span>
                 <span className="text-base font-bold tracking-wide text-foreground">team</span>
-                <p className="text-[8px] tracking-[0.2em] text-muted-foreground uppercase -mt-0.5">Management School</p>
+                <p className="text-[8px] tracking-[0.2em] text-muted-foreground uppercase -mt-0.5">Management Finest</p>
               </div>
             </div>
           )}
