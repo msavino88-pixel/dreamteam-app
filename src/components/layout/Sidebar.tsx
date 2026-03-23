@@ -51,16 +51,10 @@ export function Sidebar({ mobileOpen, onMobileClose, collapsed, onToggleCollapse
         {/* Header */}
         <div className={cn("flex items-center py-6", isCollapsed ? "justify-center px-3" : "justify-between px-5")}>
           {isCollapsed ? (
-            <svg viewBox="0 0 32 32" className="h-7 w-7 text-foreground" fill="currentColor">
-              <path d="M16 4c-2 0-4 2-5 5s-3 5-5 5c2 0 4 2 5 5s3 5 5 5c2 0 4-2 5-5s3-5 5-5c-2 0-4-2-5-5s-3-5-5-5z" opacity="0.9"/>
-              <path d="M8 2c-1 0-2 1-2.5 2.5S4 7 3 7c1 0 2 1 2.5 2.5S7 12 8 12s2-1 2.5-2.5S12 7 13 7c-1 0-2-1-2.5-2.5S9 2 8 2z" opacity="0.3"/>
-            </svg>
+            <img src="/logo.svg" alt="dreamteam" className="h-8 w-8" />
           ) : (
             <div className="flex items-center gap-2.5">
-              <svg viewBox="0 0 32 32" className="h-7 w-7 text-foreground" fill="currentColor">
-                <path d="M16 4c-2 0-4 2-5 5s-3 5-5 5c2 0 4 2 5 5s3 5 5 5c2 0 4-2 5-5s3-5 5-5c-2 0-4-2-5-5s-3-5-5-5z" opacity="0.9"/>
-                <path d="M8 2c-1 0-2 1-2.5 2.5S4 7 3 7c1 0 2 1 2.5 2.5S7 12 8 12s2-1 2.5-2.5S12 7 13 7c-1 0-2-1-2.5-2.5S9 2 8 2z" opacity="0.3"/>
-              </svg>
+              <img src="/logo.svg" alt="dreamteam" className="h-9 w-9" />
               <div>
                 <span className="text-base font-light tracking-wide text-foreground">dream</span>
                 <span className="text-base font-bold tracking-wide text-foreground">team</span>

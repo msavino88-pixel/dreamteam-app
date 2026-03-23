@@ -52,11 +52,8 @@ export default function Login() {
       <div className="max-w-sm w-full">
         {/* Logo */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-2.5 mb-4">
-            <svg viewBox="0 0 32 32" className="h-11 w-11 text-[var(--accent-lime)]" fill="currentColor">
-              <path d="M16 4c-2 0-4 2-5 5s-3 5-5 5c2 0 4 2 5 5s3 5 5 5c2 0 4-2 5-5s3-5 5-5c-2 0-4-2-5-5s-3-5-5-5z" opacity="0.9"/>
-              <path d="M8 2c-1 0-2 1-2.5 2.5S4 7 3 7c1 0 2 1 2.5 2.5S7 12 8 12s2-1 2.5-2.5S12 7 13 7c-1 0-2-1-2.5-2.5S9 2 8 2z" opacity="0.4"/>
-            </svg>
+          <div className="flex items-center justify-center mb-4">
+            <img src="/logo.svg" alt="dreamteam" className="h-16 w-16" />
           </div>
           <div>
             <span className="text-3xl font-light tracking-wide text-white">dream</span>

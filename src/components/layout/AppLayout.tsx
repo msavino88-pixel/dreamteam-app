@@ -38,9 +38,7 @@ export function AppLayout() {
           <Menu className="h-5 w-5" />
         </button>
         <div className="flex items-center gap-2 ml-2">
-          <svg viewBox="0 0 32 32" className="h-5 w-5 text-foreground" fill="currentColor">
-            <path d="M16 4c-2 0-4 2-5 5s-3 5-5 5c2 0 4 2 5 5s3 5 5 5c2 0 4-2 5-5s3-5 5-5c-2 0-4-2-5-5s-3-5-5-5z" opacity="0.9"/>
-          </svg>
+          <img src="/logo.svg" alt="dreamteam" className="h-7 w-7" />
           <span className="text-sm font-light">dream</span>
           <span className="text-sm font-bold -ml-1">team</span>
         </div>

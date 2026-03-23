@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="grad" x1="0.6" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#9B8EBD"/>
+      <stop offset="45%" stop-color="#8B9FCA"/>
+      <stop offset="100%" stop-color="#8CBDB5"/>
+    </linearGradient>
+  </defs>
+  <!-- Upper loop (smaller, top-right) -->
+  <ellipse cx="108" cy="62" rx="28" ry="32" fill="none" stroke="url(#grad)" stroke-width="18" stroke-linecap="round" transform="rotate(-15 108 62)"/>
+  <!-- Lower loop (larger, bottom-left) -->
+  <ellipse cx="88" cy="120" rx="38" ry="42" fill="none" stroke="url(#grad)" stroke-width="18" stroke-linecap="round" transform="rotate(25 88 120)"/>
+  <!-- Connecting tail going up-right -->
+  <path d="M130 42 C140 28, 155 22, 165 30" fill="none" stroke="#9B8EBD" stroke-width="16" stroke-linecap="round"/>
+  <!-- Bottom tail curving down -->
+  <path d="M68 158 C60 172, 58 180, 62 185" fill="none" stroke="#8CBDB5" stroke-width="16" stroke-linecap="round"/>
+</svg>
