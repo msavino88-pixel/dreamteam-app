@@ -50,9 +50,9 @@ export default function Dashboard() {
   return (
     <div>
       <Header title="Dashboard" />
-      <div className="p-4 md:p-6 space-y-6">
-        {/* KPI con accenti colore sezioni dreamteam */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="px-4 md:px-6 space-y-5 md:space-y-6">
+        {/* KPI - 2 columns mobile, 4 desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           <StatCard
             title="Clienti Attivi"
             value={activeClients}
@@ -67,10 +67,10 @@ export default function Dashboard() {
             accentColor="var(--dt-branding)"
           />
           <StatCard
-            title="Fatturato Totale"
+            title="Fatturato"
             value={formatCurrency(totalRevenue)}
             icon={Euro}
-            trend={{ value: 8, label: 'vs trimestre scorso' }}
+            trend={{ value: 8, label: 'vs trimestre' }}
             accentColor="var(--dt-finance)"
           />
           <StatCard
@@ -81,33 +81,33 @@ export default function Dashboard() {
           />
         </div>
 
-        {/* Quick Actions */}
-        <div className="flex flex-wrap gap-2 md:gap-3">
-          <Button onClick={() => navigate('/clients/new')} className="gap-2 rounded-xl bg-foreground hover:bg-foreground/90 text-background">
+        {/* Quick Actions - horizontal scroll on mobile */}
+        <div className="flex gap-2 overflow-x-auto pb-1 snap-x -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap">
+          <Button onClick={() => navigate('/clients/new')} className="gap-2 shrink-0 snap-start">
             <Plus className="h-4 w-4" /> Nuovo Cliente
           </Button>
-          <Button variant="outline" onClick={() => navigate('/projects/new')} className="gap-2 rounded-xl border-foreground/15 hover:bg-white/60">
+          <Button variant="outline" onClick={() => navigate('/projects/new')} className="gap-2 shrink-0 snap-start">
             <Plus className="h-4 w-4" /> Nuovo Progetto
           </Button>
-          <Button variant="outline" onClick={() => setIdeaOpen(true)} className="gap-2 rounded-xl border-foreground/15 hover:bg-white/60">
+          <Button variant="outline" onClick={() => setIdeaOpen(true)} className="gap-2 shrink-0 snap-start">
             <Lightbulb className="h-4 w-4" /> Nuova Idea
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Progetti Recenti - dark card */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+          {/* Progetti Recenti */}
           <div className="lg:col-span-2">
-            <div className="rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-4 md:p-6">
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-base font-semibold text-card-foreground">Progetti Attivi</h3>
+            <div className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-4 md:p-6">
+              <div className="flex items-center justify-between mb-4 md:mb-5">
+                <h3 className="text-base font-semibold">Progetti Attivi</h3>
                 <button
                   onClick={() => navigate('/projects')}
-                  className="text-xs text-muted-foreground hover:text-card-foreground/70 flex items-center gap-1 transition-colors"
+                  className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
                 >
                   Vedi tutti <ArrowRight className="h-3 w-3" />
                 </button>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {recentProjects.map(project => {
                   const projectTasks = tasks.filter(t => t.project_id === project.id);
                   const completed = projectTasks.filter(t => t.status === 'done').length;
@@ -117,36 +117,38 @@ export default function Dashboard() {
                   return (
                     <div
                       key={project.id}
-                      className="flex items-center gap-3 p-3 md:p-4 rounded-xl bg-muted/50 cursor-pointer hover:bg-muted transition-colors"
+                      className="flex items-center gap-3 p-3 md:p-4 rounded-2xl bg-muted/40 cursor-pointer active:bg-muted/80 hover:bg-muted/60 transition-colors"
                       onClick={() => navigate(`/projects/${project.id}`)}
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-card shadow-soft shrink-0">
                         <CheckCircle2 className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-card-foreground truncate">{project.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {client?.company_name} | {formatDate(project.end_date)}
+                        <p className="text-sm font-semibold truncate">{project.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {client?.company_name} {project.end_date ? `| ${formatDate(project.end_date)}` : ''}
                         </p>
                       </div>
-                      <div className="w-28 space-y-1.5">
-                        <div className="flex justify-between text-[11px]">
+                      <div className="w-20 md:w-28 space-y-1.5 shrink-0">
+                        <div className="flex justify-between text-[10px] md:text-[11px]">
                           <span className="text-muted-foreground">{completed}/{projectTasks.length}</span>
-                          <span className="font-medium text-card-foreground/70">{Math.round(progress)}%</span>
+                          <span className="font-medium">{Math.round(progress)}%</span>
                         </div>
                         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                           <div
                             className="h-full rounded-full transition-all duration-300"
-                            style={{
-                              width: `${progress}%`,
-                              background: 'var(--dt-branding)',
-                            }}
+                            style={{ width: `${progress}%`, background: 'var(--dt-branding)' }}
                           />
                         </div>
                       </div>
                     </div>
                   );
                 })}
+                {recentProjects.length === 0 && (
+                  <div className="py-8 text-center text-sm text-muted-foreground">
+                    Nessun progetto attivo
+                  </div>
+                )}
               </div>
             </div>
           </div>
