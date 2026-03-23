@@ -17,9 +17,6 @@ export function StatCard({ title, value, subtitle, icon: Icon, trend, className,
       "rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-5 md:p-6 relative overflow-hidden",
       className
     )}>
-      {accentColor && (
-        <div className="absolute top-0 left-0 right-0 h-1 rounded-t-[28px]" style={{ background: accentColor }} />
-      )}
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <p className="text-label text-muted-foreground uppercase">{title}</p>
