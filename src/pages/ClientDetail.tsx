@@ -36,6 +36,10 @@ export default function ClientDetail() {
   const { data: interactions = [] } = useInteractions(id);
   const { data: allProjects = [] } = useProjects();
   const { data: users = [] } = useUsers();
+  const updateClient = useUpdateClient();
+  const [editOpen, setEditOpen] = useState(false);
+  const [editForm, setEditForm] = useState<Partial<Client>>({});
+  const [editMsg, setEditMsg] = useState('');
 
   if (isLoading) {
     return (
@@ -55,11 +59,6 @@ export default function ClientDetail() {
       </div>
     );
   }
-
-  const updateClient = useUpdateClient();
-  const [editOpen, setEditOpen] = useState(false);
-  const [editForm, setEditForm] = useState<Partial<Client>>({});
-  const [editMsg, setEditMsg] = useState('');
 
   const openEdit = () => {
     setEditForm({
