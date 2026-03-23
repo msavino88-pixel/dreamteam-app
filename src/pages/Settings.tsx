@@ -13,10 +13,12 @@ import { useAllTasks } from '@/hooks/useTasks';
 import { useIdeas } from '@/hooks/useIdeas';
 import { useAllSpending } from '@/hooks/useSpending';
 import { useInteractions } from '@/hooks/useInteractions';
-import { useUsers } from '@/hooks/useUsers';
+import { useUsers, useAllUsers, useUpdateUserRole, useDeactivateUser, useReactivateUser } from '@/hooks/useUsers';
+import type { UserRole } from '@/types';
 import {
   Database, Wifi, WifiOff, Moon, Sun, Download,
-  UserPlus, Shield, Mail, CheckCircle2
+  UserPlus, Shield, Mail, CheckCircle2, Users, Trash2,
+  RotateCcw, Crown, Briefcase, User
 } from 'lucide-react';
 
 const roleOptions = [
@@ -44,6 +46,11 @@ export default function Settings() {
   const { data: spending = [] } = useAllSpending();
   const { data: interactions = [] } = useInteractions();
   const { data: users = [] } = useUsers();
+  const { data: allUsers = [] } = useAllUsers();
+  const updateRole = useUpdateUserRole();
+  const deactivateUser = useDeactivateUser();
+  const reactivateUser = useReactivateUser();
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,6 +178,121 @@ export default function Settings() {
                 <p className="text-muted-foreground"><strong>Admin</strong> — Accesso completo, gestione team, impostazioni</p>
                 <p className="text-muted-foreground"><strong>Manager</strong> — Gestione clienti, progetti, assegnazione task</p>
                 <p className="text-muted-foreground"><strong>Consulente</strong> — Vede i propri progetti e task assegnate</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Manage Members (Admin only) */}
+        {isAdmin && allUsers.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Gestione Membri
+              </CardTitle>
+              <CardDescription>
+                {allUsers.filter(u => u.is_active).length} attivi, {allUsers.filter(u => !u.is_active).length} disattivati
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {allUsers.map(u => {
+                  const isMe = u.id === profile?.id;
+                  const RoleIcon = u.role === 'admin' ? Crown : u.role === 'manager' ? Briefcase : User;
+                  return (
+                    <div
+                      key={u.id}
+                      className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${
+                        u.is_active
+                          ? 'border-border bg-card'
+                          : 'border-border/50 bg-muted/30 opacity-60'
+                      }`}
+                    >
+                      {/* Avatar */}
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] text-xs font-bold text-white">
+                        {u.full_name.split(' ').map(n => n[0]).join('')}
+                      </div>
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium truncate">{u.full_name}</p>
+                          {isMe && (
+                            <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-medium">Tu</span>
+                          )}
+                          {!u.is_active && (
+                            <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded-full font-medium">Disattivato</span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                      </div>
+
+                      {/* Role selector */}
+                      <div className="flex items-center gap-2">
+                        <RoleIcon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                        <select
+                          value={u.role}
+                          onChange={e => updateRole.mutate({ id: u.id, role: e.target.value as UserRole })}
+                          disabled={isMe}
+                          className="text-xs bg-muted border-0 rounded-lg px-2 py-1.5 text-foreground disabled:opacity-50 cursor-pointer"
+                        >
+                          <option value="admin">Admin</option>
+                          <option value="manager">Manager</option>
+                          <option value="consultant">Consulente</option>
+                        </select>
+
+                        {/* Deactivate/Reactivate */}
+                        {!isMe && (
+                          <>
+                            {u.is_active ? (
+                              confirmDelete === u.id ? (
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-destructive border-destructive/30 hover:bg-destructive/10 text-xs h-7 px-2"
+                                    onClick={() => { deactivateUser.mutate(u.id); setConfirmDelete(null); }}
+                                  >
+                                    Conferma
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="text-xs h-7 px-2"
+                                    onClick={() => setConfirmDelete(null)}
+                                  >
+                                    No
+                                  </Button>
+                                </div>
+                              ) : (
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="text-muted-foreground hover:text-destructive h-7 w-7 p-0"
+                                  onClick={() => setConfirmDelete(u.id)}
+                                  title="Disattiva account"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </Button>
+                              )
+                            ) : (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="text-muted-foreground hover:text-emerald-600 h-7 w-7 p-0"
+                                onClick={() => reactivateUser.mutate(u.id)}
+                                title="Riattiva account"
+                              >
+                                <RotateCcw className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
