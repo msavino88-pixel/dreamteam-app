@@ -1,10 +1,10 @@
 import type { User, Client, ClientSpending, ClientInteraction, Project, Task, Idea, ActivityFeedItem } from '@/types';
 
 export const mockUsers: User[] = [
-  { id: '1', email: 'marco@consultub.it', full_name: 'Marco Rossi', role: 'admin', avatar_url: null, phone: '+39 333 1234567', is_active: true, created_at: '2024-01-01T00:00:00Z' },
-  { id: '2', email: 'giulia@consultub.it', full_name: 'Giulia Bianchi', role: 'manager', avatar_url: null, phone: '+39 333 2345678', is_active: true, created_at: '2024-01-15T00:00:00Z' },
-  { id: '3', email: 'luca@consultub.it', full_name: 'Luca Verdi', role: 'consultant', avatar_url: null, phone: '+39 333 3456789', is_active: true, created_at: '2024-02-01T00:00:00Z' },
-  { id: '4', email: 'sara@consultub.it', full_name: 'Sara Neri', role: 'consultant', avatar_url: null, phone: '+39 333 4567890', is_active: true, created_at: '2024-03-01T00:00:00Z' },
+  { id: '1', email: 'marco@consultub.it', full_name: 'Marco Rossi', role: 'admin', department: 'management', avatar_url: null, phone: '+39 333 1234567', is_active: true, created_at: '2024-01-01T00:00:00Z' },
+  { id: '2', email: 'giulia@consultub.it', full_name: 'Giulia Bianchi', role: 'manager', department: 'marketing', avatar_url: null, phone: '+39 333 2345678', is_active: true, created_at: '2024-01-15T00:00:00Z' },
+  { id: '3', email: 'luca@consultub.it', full_name: 'Luca Verdi', role: 'consultant', department: 'finance', avatar_url: null, phone: '+39 333 3456789', is_active: true, created_at: '2024-02-01T00:00:00Z' },
+  { id: '4', email: 'sara@consultub.it', full_name: 'Sara Neri', role: 'consultant', department: 'branding', avatar_url: null, phone: '+39 333 4567890', is_active: true, created_at: '2024-03-01T00:00:00Z' },
 ];
 
 export const mockClients: Client[] = [

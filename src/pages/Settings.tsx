@@ -15,7 +15,8 @@ import { useAllSpending } from '@/hooks/useSpending';
 import { useInteractions } from '@/hooks/useInteractions';
 import { useUsers, useAllUsers, useUpdateUser, useUpdateUserRole, useDeactivateUser, useReactivateUser } from '@/hooks/useUsers';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import type { User as UserType, UserRole } from '@/types';
+import type { User as UserType, UserRole, Department } from '@/types';
+import { departmentOptions, departmentBadgeClasses, departmentColors } from '@/lib/formatting';
 import {
   Database, Wifi, WifiOff, Moon, Sun, Download,
   UserPlus, Shield, Mail, CheckCircle2, Users, Trash2,
@@ -37,6 +38,7 @@ export default function Settings() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteName, setInviteName] = useState('');
   const [inviteRole, setInviteRole] = useState('consultant');
+  const [inviteDept, setInviteDept] = useState('');
   const [inviting, setInviting] = useState(false);
   const [inviteMsg, setInviteMsg] = useState('');
 
@@ -57,6 +59,7 @@ export default function Settings() {
   const [editName, setEditName] = useState('');
   const [editEmail, setEditEmail] = useState('');
   const [editRole, setEditRole] = useState<UserRole>('consultant');
+  const [editDept, setEditDept] = useState('');
   const [editMsg, setEditMsg] = useState('');
 
   const openEditModal = (u: UserType) => {
@@ -64,6 +67,7 @@ export default function Settings() {
     setEditName(u.full_name);
     setEditEmail(u.email);
     setEditRole(u.role);
+    setEditDept(u.department || '');
     setEditMsg('');
   };
 
@@ -75,6 +79,7 @@ export default function Settings() {
         full_name: editName.trim(),
         email: editEmail.trim(),
         role: editRole,
+        department: editDept || null,
       });
       setEditMsg('Salvato!');
       setTimeout(() => { setEditingUser(null); setEditMsg(''); }, 800);
@@ -105,6 +110,7 @@ export default function Settings() {
           email: inviteEmail,
           full_name: inviteName,
           role: inviteRole,
+          ...(inviteDept ? { department: inviteDept } : {}),
         });
       }
 
@@ -112,6 +118,7 @@ export default function Settings() {
       setInviteEmail('');
       setInviteName('');
       setInviteRole('consultant');
+      setInviteDept('');
     } catch (err: unknown) {
       setInviteMsg(`Errore: ${err instanceof Error ? err.message : 'sconosciuto'}`);
     } finally {
@@ -187,16 +194,20 @@ export default function Settings() {
                     <Input type="email" value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="mario@dreamteam.it" required />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-sm font-medium mb-1 block">Ruolo</label>
                     <Select options={roleOptions} value={inviteRole} onChange={e => setInviteRole(e.target.value)} />
                   </div>
-                  <Button type="submit" disabled={inviting} className="gap-2">
-                    <Mail className="h-4 w-4" />
-                    {inviting ? 'Creazione...' : 'Crea Account'}
-                  </Button>
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Area</label>
+                    <Select options={departmentOptions} value={inviteDept} onChange={e => setInviteDept(e.target.value)} />
+                  </div>
                 </div>
+                <Button type="submit" disabled={inviting} className="gap-2 w-full sm:w-auto">
+                  <Mail className="h-4 w-4" />
+                  {inviting ? 'Creazione...' : 'Crea Account'}
+                </Button>
                 {inviteMsg && (
                   <div className={`p-3 rounded-xl text-sm ${inviteMsg.startsWith('Errore') ? 'bg-destructive/10 text-destructive' : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'}`}>
                     {!inviteMsg.startsWith('Errore') && <CheckCircle2 className="inline h-4 w-4 mr-1" />}
@@ -241,13 +252,20 @@ export default function Settings() {
                       }`}
                     >
                       {/* Avatar */}
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] text-xs font-bold text-white">
+                      <div
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+                        style={{
+                          background: u.department && departmentColors[u.department]
+                            ? `linear-gradient(135deg, ${departmentColors[u.department]}, ${departmentColors[u.department]}cc)`
+                            : 'linear-gradient(135deg, #9B8EBD, #7B9BBF)'
+                        }}
+                      >
                         {u.full_name.split(' ').map(n => n[0]).join('')}
                       </div>
 
                       {/* Info */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <p className="text-sm font-medium truncate">{u.full_name}</p>
                           {isMe && (
                             <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-medium">Tu</span>
@@ -256,7 +274,14 @@ export default function Settings() {
                             <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded-full font-medium">Disattivato</span>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                          {u.department && departmentBadgeClasses[u.department] && (
+                            <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full border whitespace-nowrap ${departmentBadgeClasses[u.department]}`}>
+                              {u.department.charAt(0).toUpperCase() + u.department.slice(1)}
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       {/* Actions */}
@@ -392,7 +417,14 @@ export default function Settings() {
           {editingUser && (
             <div className="space-y-4">
               <div className="flex items-center gap-3 pb-3 border-b border-border">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] text-sm font-bold text-white">
+                <div
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+                  style={{
+                    background: editDept && departmentColors[editDept]
+                      ? `linear-gradient(135deg, ${departmentColors[editDept]}, ${departmentColors[editDept]}cc)`
+                      : 'linear-gradient(135deg, #9B8EBD, #7B9BBF)'
+                  }}
+                >
                   {editName.split(' ').map(n => n[0]).join('') || '?'}
                 </div>
                 <div>
@@ -426,6 +458,15 @@ export default function Settings() {
                   options={roleOptions}
                   value={editRole}
                   onChange={e => setEditRole(e.target.value as UserRole)}
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Area</label>
+                <Select
+                  options={departmentOptions}
+                  value={editDept}
+                  onChange={e => setEditDept(e.target.value)}
                 />
               </div>
 

@@ -38,7 +38,7 @@ export function useUser(id: string | undefined) {
 export function useUpdateUser() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...updates }: { id: string; full_name?: string; email?: string; role?: UserRole; avatar_url?: string | null }) => {
+    mutationFn: async ({ id, ...updates }: { id: string; full_name?: string; email?: string; role?: UserRole; avatar_url?: string | null; department?: string | null }) => {
       if (!supabase) throw new Error('Supabase non configurato');
       const { error } = await supabase.from('users').update(updates).eq('id', id);
       if (error) throw error;
