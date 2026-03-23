@@ -97,7 +97,7 @@ export default function ProjectDetail() {
               <p className="text-[11px] text-muted-foreground mb-2">Progresso</p>
               <div className="flex items-center gap-2">
                 <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full rounded-full" style={{ width: `${progress}%`, background: 'var(--dt-branding)' }} />
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} />
                 </div>
                 <span className="text-sm font-semibold text-card-foreground/70">{Math.round(progress)}%</span>
               </div>

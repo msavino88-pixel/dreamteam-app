@@ -20,14 +20,6 @@ const priorityDotColors: Record<string, string> = {
   urgent: 'bg-[#D05A5A]',
 };
 
-const statusBarColors: Record<string, string> = {
-  planning: 'var(--dt-ai)',
-  active: 'var(--dt-branding)',
-  paused: 'var(--dt-management)',
-  completed: 'var(--dt-finance)',
-  archived: 'var(--dt-hr)',
-};
-
 export function ProjectCard({ project, tasks: allTasks = [], clients: allClients = [], onEdit, onArchive, onDelete }: ProjectCardProps) {
   const navigate = useNavigate();
   const client = allClients.find(c => c.id === project.client_id);
@@ -37,11 +29,9 @@ export function ProjectCard({ project, tasks: allTasks = [], clients: allClients
 
   return (
     <div
-      className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-6 cursor-pointer hover:shadow-float transition-all duration-300 hover:scale-[1.01] relative overflow-hidden"
+      className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-6 cursor-pointer hover:shadow-float transition-all duration-300 hover:scale-[1.01]"
       onClick={() => navigate(`/projects/${project.id}`)}
     >
-      {/* Accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-1" style={{ background: statusBarColors[project.status] }} />
 
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
@@ -77,8 +67,8 @@ export function ProjectCard({ project, tasks: allTasks = [], clients: allClients
         </div>
         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
           <div
-            className="h-full rounded-full transition-all duration-300"
-            style={{ width: `${progress}%`, background: statusBarColors[project.status] }}
+            className="h-full rounded-full transition-all duration-300 bg-primary"
+            style={{ width: `${progress}%` }}
           />
         </div>
       </div>

@@ -14,13 +14,6 @@ const priorityColors: Record<string, string> = {
   urgent: 'bg-[#D05A5A]',
 };
 
-const statusBarColors: Record<string, string> = {
-  planning: 'var(--dt-ai)',
-  active: 'var(--dt-branding)',
-  paused: 'var(--dt-management)',
-  completed: 'var(--dt-finance)',
-  archived: 'var(--dt-hr)',
-};
 
 export default function MyWork() {
   const navigate = useNavigate();
@@ -64,11 +57,10 @@ export default function MyWork() {
                 return (
                   <div
                     key={project.id}
-                    className="bg-card rounded-2xl p-4 border border-border shadow-sm cursor-pointer hover:shadow-md transition-all relative overflow-hidden"
+                    className="bg-card rounded-2xl p-4 border border-border shadow-sm cursor-pointer hover:shadow-md transition-all"
                     onClick={() => navigate(`/projects/${project.id}`)}
                   >
-                    <div className="absolute top-0 left-0 right-0 h-1" style={{ background: statusBarColors[project.status] }} />
-                    <div className="flex items-center gap-3 mb-3 mt-1">
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="rounded-xl bg-muted p-2">
                         <FolderKanban className="h-4 w-4 text-muted-foreground" />
                       </div>
@@ -84,7 +76,7 @@ export default function MyWork() {
                         <span className="font-medium">{Math.round(progress)}%</span>
                       </div>
                       <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, background: statusBarColors[project.status] }} />
+                        <div className="h-full rounded-full transition-all bg-primary" style={{ width: `${progress}%` }} />
                       </div>
                     </div>
                   </div>

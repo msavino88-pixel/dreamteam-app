@@ -58,26 +58,22 @@ export default function Dashboard() {
             value={activeClients}
             icon={Users}
             trend={{ value: 12, label: 'vs mese scorso' }}
-            accentColor="var(--dt-management)"
           />
           <StatCard
             title="Progetti in Corso"
             value={activeProjects}
             icon={FolderKanban}
-            accentColor="var(--dt-branding)"
           />
           <StatCard
             title="Fatturato"
             value={formatCurrency(totalRevenue)}
             icon={Euro}
             trend={{ value: 8, label: 'vs trimestre' }}
-            accentColor="var(--dt-finance)"
           />
           <StatCard
             title="Task Scadute"
             value={overdueTasks}
             icon={AlertTriangle}
-            accentColor="var(--dt-marketing)"
           />
         </div>
 
@@ -136,8 +132,8 @@ export default function Dashboard() {
                         </div>
                         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                           <div
-                            className="h-full rounded-full transition-all duration-300"
-                            style={{ width: `${progress}%`, background: 'var(--dt-branding)' }}
+                            className="h-full rounded-full transition-all duration-300 bg-primary"
+                            style={{ width: `${progress}%` }}
                           />
                         </div>
                       </div>

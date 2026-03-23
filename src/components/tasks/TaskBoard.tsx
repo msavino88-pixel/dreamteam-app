@@ -25,11 +25,11 @@ interface TaskBoardProps {
   onUpdateTask?: (updates: Partial<Task> & { id: string }) => void;
 }
 
-const columns: { status: Task['status']; label: string; accentColor: string }[] = [
-  { status: 'todo', label: 'Da Fare', accentColor: 'var(--dt-management)' },
-  { status: 'in_progress', label: 'In Corso', accentColor: 'var(--dt-ai)' },
-  { status: 'review', label: 'Revisione', accentColor: 'var(--dt-branding)' },
-  { status: 'done', label: 'Fatto', accentColor: 'var(--dt-finance)' },
+const columns: { status: Task['status']; label: string }[] = [
+  { status: 'todo', label: 'Da Fare' },
+  { status: 'in_progress', label: 'In Corso' },
+  { status: 'review', label: 'Revisione' },
+  { status: 'done', label: 'Fatto' },
 ];
 
 const priorityDotColors: Record<string, string> = {
@@ -189,10 +189,8 @@ export function TaskBoard({ tasks, onStatusChange, onUpdateTask }: TaskBoardProp
                 items={columnTasks.map(t => t.id)}
                 strategy={verticalListSortingStrategy}
               >
-                <div className="min-w-[260px] md:min-w-0 md:flex-1 snap-start rounded-xl bg-muted/50 p-3 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: col.accentColor }} />
-
-                  <div className="flex items-center justify-between mb-3 mt-1">
+                <div className="min-w-[260px] md:min-w-0 md:flex-1 snap-start rounded-xl bg-muted/50 p-3">
+                  <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-semibold text-card-foreground/80">{col.label}</h3>
                     <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                       {columnTasks.length}

@@ -61,7 +61,7 @@ export function AppLayout() {
               #main-content { margin-left: ${collapsed ? 72 : 260}px; }
             }
           `}</style>
-          <div id="main-content" className="transition-[margin] duration-300">
+          <div id="main-content" className="transition-[margin] duration-300 relative z-0">
             <Outlet />
           </div>
         </div>

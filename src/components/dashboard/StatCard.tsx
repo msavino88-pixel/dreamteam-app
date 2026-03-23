@@ -8,13 +8,12 @@ interface StatCardProps {
   icon: LucideIcon;
   trend?: { value: number; label: string };
   className?: string;
-  accentColor?: string;
 }
 
-export function StatCard({ title, value, subtitle, icon: Icon, trend, className, accentColor }: StatCardProps) {
+export function StatCard({ title, value, subtitle, icon: Icon, trend, className }: StatCardProps) {
   return (
     <div className={cn(
-      "rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-5 md:p-6 relative overflow-hidden",
+      "rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-5 md:p-6",
       className
     )}>
       <div className="flex items-start justify-between">
