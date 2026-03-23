@@ -16,8 +16,8 @@ export default function Login() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#1a1a1e]">
-        <div className="h-8 w-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-[#111111]">
+        <div className="h-8 w-8 border-2 border-white/20 border-t-[var(--accent-lime)] rounded-full animate-spin" />
       </div>
     );
   }
@@ -48,44 +48,44 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#1a1a1e] p-4 sm:p-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#111111] p-4 sm:p-6">
       <div className="max-w-sm w-full">
         {/* Logo */}
-        <div className="text-center mb-10">
-          <div className="flex items-center justify-center gap-2.5 mb-3">
-            <svg viewBox="0 0 32 32" className="h-10 w-10 text-white" fill="currentColor">
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-2.5 mb-4">
+            <svg viewBox="0 0 32 32" className="h-11 w-11 text-[var(--accent-lime)]" fill="currentColor">
               <path d="M16 4c-2 0-4 2-5 5s-3 5-5 5c2 0 4 2 5 5s3 5 5 5c2 0 4-2 5-5s3-5 5-5c-2 0-4-2-5-5s-3-5-5-5z" opacity="0.9"/>
-              <path d="M8 2c-1 0-2 1-2.5 2.5S4 7 3 7c1 0 2 1 2.5 2.5S7 12 8 12s2-1 2.5-2.5S12 7 13 7c-1 0-2-1-2.5-2.5S9 2 8 2z" opacity="0.5"/>
+              <path d="M8 2c-1 0-2 1-2.5 2.5S4 7 3 7c1 0 2 1 2.5 2.5S7 12 8 12s2-1 2.5-2.5S12 7 13 7c-1 0-2-1-2.5-2.5S9 2 8 2z" opacity="0.4"/>
             </svg>
           </div>
           <div>
-            <span className="text-2xl font-light tracking-wide text-white">dream</span>
-            <span className="text-2xl font-bold tracking-wide text-white">team</span>
+            <span className="text-3xl font-light tracking-wide text-white">dream</span>
+            <span className="text-3xl font-bold tracking-wide text-white">team</span>
           </div>
-          <p className="text-[10px] tracking-[0.25em] text-white/30 uppercase mt-1">Management School</p>
+          <p className="text-[10px] tracking-[0.25em] text-white/25 uppercase mt-1.5">Management School</p>
         </div>
 
         {/* Barra colori */}
-        <div className="flex gap-1.5 mb-8 px-8">
-          <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-management)' }} />
-          <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-marketing)' }} />
-          <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-finance)' }} />
-          <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-branding)' }} />
-          <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-hr)' }} />
-          <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-ai)' }} />
+        <div className="flex gap-1.5 mb-10 px-10">
+          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-management)' }} />
+          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-marketing)' }} />
+          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-finance)' }} />
+          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-branding)' }} />
+          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-hr)' }} />
+          <div className="h-0.5 flex-1 rounded-full" style={{ background: 'var(--dt-ai)' }} />
         </div>
 
         {/* Form */}
-        <div className="rounded-2xl bg-white/5 p-6">
-          <h2 className="text-lg font-semibold text-white mb-1">
+        <div className="rounded-[28px] bg-white/[0.04] backdrop-blur-sm p-7">
+          <h2 className="text-xl font-semibold text-white mb-1 tracking-tight">
             {isSignUp ? 'Registrati' : 'Accedi'}
           </h2>
-          <p className="text-sm text-white/30 mb-6">
+          <p className="text-sm text-white/30 mb-7">
             {isSignUp ? 'Crea il tuo account dreamteam' : 'Entra nel tuo spazio di lavoro'}
           </p>
 
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            <div className="mb-5 p-3.5 rounded-2xl bg-red-500/10 border border-red-500/15 text-red-400 text-sm">
               {error}
             </div>
           )}
@@ -93,19 +93,19 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {isSignUp && (
               <div>
-                <label className="text-sm font-medium mb-1.5 block text-white/60">Nome Completo</label>
+                <label className="text-label mb-2 block text-white/50 uppercase">Nome Completo</label>
                 <Input
                   type="text"
                   placeholder="Mario Rossi"
                   value={fullName}
                   onChange={e => setFullName(e.target.value)}
                   required
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-xl focus:border-[#9B8EBD] focus:ring-[#9B8EBD]"
+                  className="bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/20 rounded-2xl focus:border-[var(--accent-lime)] focus:ring-[var(--accent-lime)]/30"
                 />
               </div>
             )}
             <div>
-              <label className="text-sm font-medium mb-1.5 block text-white/60">Email</label>
+              <label className="text-label mb-2 block text-white/50 uppercase">Email</label>
               <Input
                 type="email"
                 placeholder="nome@dreamteam.it"
@@ -113,11 +113,11 @@ export default function Login() {
                 onChange={e => setEmail(e.target.value)}
                 required
                 autoFocus
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-xl focus:border-[#9B8EBD] focus:ring-[#9B8EBD]"
+                className="bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/20 rounded-2xl focus:border-[var(--accent-lime)] focus:ring-[var(--accent-lime)]/30"
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block text-white/60">Password</label>
+              <label className="text-label mb-2 block text-white/50 uppercase">Password</label>
               <Input
                 type="password"
                 placeholder={isSignUp ? 'Minimo 6 caratteri' : 'La tua password'}
@@ -125,22 +125,22 @@ export default function Login() {
                 onChange={e => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-xl focus:border-[#9B8EBD] focus:ring-[#9B8EBD]"
+                className="bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/20 rounded-2xl focus:border-[var(--accent-lime)] focus:ring-[var(--accent-lime)]/30"
               />
             </div>
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-xl bg-white text-[#1a1a1e] hover:bg-white/90 font-semibold h-11 disabled:opacity-50"
+              className="w-full rounded-2xl bg-[var(--accent-lime)] text-[#111111] hover:brightness-110 hover:shadow-glow font-semibold h-12 text-base mt-2 disabled:opacity-50"
             >
               {submitting ? 'Attendere...' : isSignUp ? 'Crea Account' : 'Accedi'}
             </Button>
-            <p className="text-[11px] text-center text-white/40">
+            <p className="text-xs text-center text-white/35 pt-1">
               {isSignUp ? 'Hai già un account?' : 'Non hai un account?'}{' '}
               <button
                 type="button"
                 onClick={() => { setIsSignUp(!isSignUp); setError(''); }}
-                className="text-white/70 hover:text-white underline transition-colors"
+                className="text-[var(--accent-lime)] hover:text-[var(--accent-lime)]/80 transition-colors font-medium"
               >
                 {isSignUp ? 'Accedi' : 'Registrati'}
               </button>

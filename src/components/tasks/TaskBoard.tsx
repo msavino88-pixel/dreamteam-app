@@ -64,7 +64,7 @@ function SortableTaskCard({ task, onClick, subtaskCount, subtaskDone }: {
     <div
       ref={setNodeRef}
       style={style}
-      className="rounded-xl bg-card border border-border p-3.5 hover:shadow-md transition-all cursor-pointer group"
+      className="rounded-2xl bg-card border-0 shadow-soft p-4 hover:shadow-float transition-all duration-300 cursor-pointer group"
       onClick={onClick}
     >
       <div className="flex items-start gap-1.5">

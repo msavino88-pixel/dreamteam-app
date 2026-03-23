@@ -28,7 +28,7 @@ export function IdeaCard({ idea, onVote, onEdit, onStatusChange, onDelete, users
   const project = idea.project_id ? projects.find(p => p.id === idea.project_id) : null;
 
   return (
-    <div className="rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-5 hover:bg-muted/50 transition-all duration-200">
+    <div className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-6 hover:shadow-float transition-all duration-300">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="rounded-xl bg-[#D5C8B8]/20 p-2">

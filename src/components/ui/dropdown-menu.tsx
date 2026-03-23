@@ -26,7 +26,7 @@ export function DropdownMenu({ trigger, children }: DropdownMenuProps) {
       </div>
       {open && (
         <div
-          className="absolute right-0 top-full mt-1 z-50 min-w-[160px] bg-card border border-border rounded-xl shadow-lg overflow-hidden py-1"
+          className="absolute right-0 top-full mt-1 z-50 min-w-[160px] bg-card border-0 rounded-2xl shadow-float overflow-hidden py-1.5"
           onClick={() => setOpen(false)}
         >
           {children}

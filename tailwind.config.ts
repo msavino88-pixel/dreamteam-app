@@ -42,6 +42,11 @@ export default {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
+        // Soft UI accents
+        lime: "var(--accent-lime)",
+        "accent-yellow": "var(--accent-yellow)",
+        "accent-purple": "var(--accent-purple)",
+        "accent-success": "var(--accent-success)",
         // Colori sezioni dreamteam
         dt: {
           management: "var(--dt-management)",
@@ -53,14 +58,28 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 4px)",
-        sm: "calc(var(--radius) - 8px)",
-        xl: "calc(var(--radius) + 4px)",
-        "2xl": "calc(var(--radius) + 8px)",
+        sm: "8px",
+        md: "var(--radius)",
+        lg: "calc(var(--radius) + 4px)",
+        xl: "calc(var(--radius) + 8px)",
+        "2xl": "28px",
+        "3xl": "32px",
+        pill: "9999px",
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'SF Pro Display', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      fontSize: {
+        "label": ["13px", { fontWeight: "500", letterSpacing: "0.03em" }],
+      },
+      boxShadow: {
+        "soft": "var(--shadow-soft)",
+        "float": "var(--shadow-float)",
+        "glow": "var(--shadow-glow)",
+      },
+      spacing: {
+        "card-p": "24px",
+        "section": "40px",
       },
     },
   },

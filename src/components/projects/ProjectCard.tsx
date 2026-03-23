@@ -37,7 +37,7 @@ export function ProjectCard({ project, tasks: allTasks = [], clients: allClients
 
   return (
     <div
-      className="rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-5 cursor-pointer hover:bg-muted/50 transition-all duration-200 hover:scale-[1.01] relative overflow-hidden"
+      className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-6 cursor-pointer hover:shadow-float transition-all duration-300 hover:scale-[1.01] relative overflow-hidden"
       onClick={() => navigate(`/projects/${project.id}`)}
     >
       {/* Accent bar */}

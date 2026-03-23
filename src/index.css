@@ -2,31 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @layer base {
   :root {
-    /* Light mode: grigio chiaro elegante con alta leggibilita */
-    --background: 220 14% 96%;
-    --foreground: 220 20% 14%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 20% 14%;
+    /* Soft UI Minimalist - Light */
+    --background: 228 14% 96%;     /* #F4F5F8 */
+    --foreground: 228 10% 11%;     /* #1A1B1E */
+    --card: 0 0% 100%;             /* #FFFFFF */
+    --card-foreground: 228 10% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 14%;
-    --primary: 270 50% 55%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 14% 92%;
-    --secondary-foreground: 220 20% 14%;
-    --muted: 220 14% 92%;
-    --muted-foreground: 220 10% 46%;
-    --accent: 270 50% 55%;
+    --popover-foreground: 228 10% 11%;
+    --primary: 78 100% 60%;        /* #D4FF33 */
+    --primary-foreground: 228 10% 11%;
+    --secondary: 228 10% 95%;
+    --secondary-foreground: 228 10% 11%;
+    --muted: 228 10% 93%;
+    --muted-foreground: 230 5% 57%;  /* #8B8D98 */
+    --accent: 267 52% 61%;          /* #8A63D2 */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 90%;
-    --input: 220 13% 90%;
-    --ring: 270 50% 55%;
-    --radius: 1rem;
+    --border: 228 10% 90%;
+    --input: 228 10% 90%;
+    --ring: 78 100% 60%;
+    --radius: 16px;
 
-    --sidebar-bg: #1a1a1e;
+    --sidebar-bg: #111111;
 
     /* Colori sezioni dreamteam */
     --dt-management: #D5C8B8;
@@ -35,30 +37,45 @@
     --dt-branding: #9B8EBD;
     --dt-hr: #BCC8B8;
     --dt-ai: #7B9BBF;
+
+    /* Soft UI accents */
+    --accent-lime: #D4FF33;
+    --accent-yellow: #FFD84D;
+    --accent-purple: #8A63D2;
+    --accent-success: #4CAF50;
+
+    /* Shadows */
+    --shadow-soft: 0px 8px 24px rgba(0, 0, 0, 0.04);
+    --shadow-float: 0px 16px 40px rgba(0, 0, 0, 0.08);
+    --shadow-glow: 0px 4px 12px rgba(212, 255, 51, 0.4);
   }
 
   .dark {
-    --background: 220 16% 10%;
-    --foreground: 220 14% 92%;
-    --card: 220 16% 14%;
-    --card-foreground: 220 14% 92%;
-    --popover: 220 16% 14%;
-    --popover-foreground: 220 14% 92%;
-    --primary: 270 50% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 16% 18%;
-    --secondary-foreground: 220 14% 92%;
-    --muted: 220 16% 18%;
-    --muted-foreground: 220 10% 55%;
-    --accent: 270 50% 60%;
+    --background: 228 16% 7%;       /* #101114 */
+    --foreground: 228 10% 93%;
+    --card: 228 14% 11%;            /* #181A1F */
+    --card-foreground: 228 10% 93%;
+    --popover: 228 14% 11%;
+    --popover-foreground: 228 10% 93%;
+    --primary: 78 100% 60%;
+    --primary-foreground: 228 10% 11%;
+    --secondary: 228 14% 15%;
+    --secondary-foreground: 228 10% 93%;
+    --muted: 228 14% 15%;
+    --muted-foreground: 230 5% 50%;
+    --accent: 267 52% 61%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 20%;
-    --input: 220 13% 20%;
-    --ring: 270 50% 60%;
+    --border: 228 12% 18%;
+    --input: 228 12% 18%;
+    --ring: 78 100% 60%;
 
-    --sidebar-bg: #111114;
+    --sidebar-bg: #0A0A0C;
+
+    --shadow-soft: 0px 8px 24px rgba(0, 0, 0, 0.2);
+    --shadow-float: 0px 16px 40px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0px 4px 12px rgba(212, 255, 51, 0.2);
   }
 
   * {
@@ -67,21 +84,29 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.03em;
   }
 }
 
 /* Scrollbar personalizzata */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
+  background: hsl(var(--muted-foreground) / 0.2);
   border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.35);
 }

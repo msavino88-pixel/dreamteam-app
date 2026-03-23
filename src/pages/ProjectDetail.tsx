@@ -48,7 +48,7 @@ export default function ProjectDetail() {
         </Button>
 
         {/* Header - dark card */}
-        <div className="rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-4 md:p-6">
+        <div className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-5 md:p-7">
           <div className="flex items-center gap-4 mb-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-muted">
               <FolderKanban className="h-7 w-7 text-muted-foreground" />
@@ -106,7 +106,7 @@ export default function ProjectDetail() {
         </div>
 
         {/* Task Board - dark card */}
-        <div className="rounded-2xl bg-card text-card-foreground shadow-sm border border-border p-4 md:p-6">
+        <div className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-5 md:p-7">
           <h3 className="text-base font-semibold text-card-foreground mb-4">Board Task</h3>
           <TaskBoard
             tasks={tasks}
