@@ -13,12 +13,13 @@ import { useAllTasks } from '@/hooks/useTasks';
 import { useIdeas } from '@/hooks/useIdeas';
 import { useAllSpending } from '@/hooks/useSpending';
 import { useInteractions } from '@/hooks/useInteractions';
-import { useUsers, useAllUsers, useUpdateUserRole, useDeactivateUser, useReactivateUser } from '@/hooks/useUsers';
-import type { UserRole } from '@/types';
+import { useUsers, useAllUsers, useUpdateUser, useUpdateUserRole, useDeactivateUser, useReactivateUser } from '@/hooks/useUsers';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import type { User as UserType, UserRole } from '@/types';
 import {
   Database, Wifi, WifiOff, Moon, Sun, Download,
   UserPlus, Shield, Mail, CheckCircle2, Users, Trash2,
-  RotateCcw, Crown, Briefcase, User
+  RotateCcw, Crown, Briefcase, User, Pencil, Save, X
 } from 'lucide-react';
 
 const roleOptions = [
@@ -47,10 +48,40 @@ export default function Settings() {
   const { data: interactions = [] } = useInteractions();
   const { data: users = [] } = useUsers();
   const { data: allUsers = [] } = useAllUsers();
+  const updateUser = useUpdateUser();
   const updateRole = useUpdateUserRole();
   const deactivateUser = useDeactivateUser();
   const reactivateUser = useReactivateUser();
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [editingUser, setEditingUser] = useState<UserType | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+  const [editRole, setEditRole] = useState<UserRole>('consultant');
+  const [editMsg, setEditMsg] = useState('');
+
+  const openEditModal = (u: UserType) => {
+    setEditingUser(u);
+    setEditName(u.full_name);
+    setEditEmail(u.email);
+    setEditRole(u.role);
+    setEditMsg('');
+  };
+
+  const handleSaveUser = async () => {
+    if (!editingUser || !editName.trim() || !editEmail.trim()) return;
+    try {
+      await updateUser.mutateAsync({
+        id: editingUser.id,
+        full_name: editName.trim(),
+        email: editEmail.trim(),
+        role: editRole,
+      });
+      setEditMsg('Salvato!');
+      setTimeout(() => { setEditingUser(null); setEditMsg(''); }, 800);
+    } catch (err: unknown) {
+      setEditMsg(`Errore: ${err instanceof Error ? err.message : 'sconosciuto'}`);
+    }
+  };
 
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -228,19 +259,23 @@ export default function Settings() {
                         <p className="text-xs text-muted-foreground truncate">{u.email}</p>
                       </div>
 
-                      {/* Role selector */}
+                      {/* Actions */}
                       <div className="flex items-center gap-2">
                         <RoleIcon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                        <select
-                          value={u.role}
-                          onChange={e => updateRole.mutate({ id: u.id, role: e.target.value as UserRole })}
-                          disabled={isMe}
-                          className="text-xs bg-muted border-0 rounded-lg px-2 py-1.5 text-foreground disabled:opacity-50 cursor-pointer"
+                        <span className="text-xs text-muted-foreground min-w-[70px]">
+                          {u.role === 'admin' ? 'Admin' : u.role === 'manager' ? 'Manager' : 'Consulente'}
+                        </span>
+
+                        {/* Edit button */}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-muted-foreground hover:text-primary h-7 w-7 p-0"
+                          onClick={() => openEditModal(u)}
+                          title="Modifica info"
                         >
-                          <option value="admin">Admin</option>
-                          <option value="manager">Manager</option>
-                          <option value="consultant">Consulente</option>
-                        </select>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
 
                         {/* Deactivate/Reactivate */}
                         {!isMe && (
@@ -347,6 +382,73 @@ export default function Settings() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Edit User Modal */}
+      <Dialog open={!!editingUser} onOpenChange={(open) => { if (!open) setEditingUser(null); }}>
+        <DialogContent onClose={() => setEditingUser(null)} className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Modifica Membro</DialogTitle>
+          </DialogHeader>
+          {editingUser && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 pb-3 border-b border-border">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] text-sm font-bold text-white">
+                  {editName.split(' ').map(n => n[0]).join('') || '?'}
+                </div>
+                <div>
+                  <p className="text-sm font-medium">{editingUser.full_name}</p>
+                  <p className="text-xs text-muted-foreground">Registrato il {new Date(editingUser.created_at).toLocaleDateString('it-IT')}</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Nome Completo</label>
+                <Input
+                  value={editName}
+                  onChange={e => setEditName(e.target.value)}
+                  placeholder="Nome e Cognome"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Email</label>
+                <Input
+                  type="email"
+                  value={editEmail}
+                  onChange={e => setEditEmail(e.target.value)}
+                  placeholder="email@dreamteam.it"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Ruolo</label>
+                <Select
+                  options={roleOptions}
+                  value={editRole}
+                  onChange={e => setEditRole(e.target.value as UserRole)}
+                />
+              </div>
+
+              {editMsg && (
+                <div className={`p-2.5 rounded-xl text-sm ${editMsg.startsWith('Errore') ? 'bg-destructive/10 text-destructive' : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'}`}>
+                  {!editMsg.startsWith('Errore') && <CheckCircle2 className="inline h-4 w-4 mr-1" />}
+                  {editMsg}
+                </div>
+              )}
+
+              <div className="flex gap-2 pt-2">
+                <Button onClick={handleSaveUser} disabled={updateUser.isPending || !editName.trim() || !editEmail.trim()} className="flex-1 gap-2">
+                  <Save className="h-4 w-4" />
+                  {updateUser.isPending ? 'Salvataggio...' : 'Salva Modifiche'}
+                </Button>
+                <Button variant="outline" onClick={() => setEditingUser(null)}>
+                  Annulla
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
