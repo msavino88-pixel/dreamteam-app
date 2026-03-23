@@ -84,12 +84,8 @@ export default function Ideas() {
               }}
               onStatusChange={(i, status) => updateIdea.mutate({ id: i.id, status: status as any })}
               onDelete={(i) => {
-                if (confirmDeleteId === i.id) {
+                if (window.confirm(`Eliminare l'idea "${i.title}"? Questa azione è irreversibile.`)) {
                   deleteIdea.mutate(i.id);
-                  setConfirmDeleteId(null);
-                } else {
-                  setConfirmDeleteId(i.id);
-                  setTimeout(() => setConfirmDeleteId(null), 3000);
                 }
               }}
               users={users}

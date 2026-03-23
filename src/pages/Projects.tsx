@@ -66,12 +66,8 @@ export default function Projects() {
               onEdit={(p) => navigate(`/projects/${p.id}`)}
               onArchive={(p) => updateProject.mutate({ id: p.id, status: p.status === 'archived' ? 'active' : 'archived' })}
               onDelete={(p) => {
-                if (confirmDeleteId === p.id) {
+                if (window.confirm(`Eliminare il progetto "${p.name}"? Questa azione è irreversibile.`)) {
                   deleteProject.mutate(p.id);
-                  setConfirmDeleteId(null);
-                } else {
-                  setConfirmDeleteId(p.id);
-                  setTimeout(() => setConfirmDeleteId(null), 3000);
                 }
               }}
             />

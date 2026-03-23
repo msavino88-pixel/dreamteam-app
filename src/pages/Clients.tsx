@@ -104,12 +104,8 @@ export default function Clients() {
               onEdit={(c) => navigate(`/clients/${c.id}`)}
               onArchive={(c) => updateClient.mutate({ id: c.id, status: c.status === 'inactive' ? 'active' : 'inactive' })}
               onDelete={(c) => {
-                if (confirmDeleteId === c.id) {
+                if (window.confirm(`Eliminare il cliente "${c.company_name}"? Questa azione è irreversibile.`)) {
                   deleteClient.mutate(c.id);
-                  setConfirmDeleteId(null);
-                } else {
-                  setConfirmDeleteId(c.id);
-                  setTimeout(() => setConfirmDeleteId(null), 3000);
                 }
               }}
             />
