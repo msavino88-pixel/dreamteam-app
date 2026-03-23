@@ -96,3 +96,41 @@ export const priorityColors: Record<string, string> = {
   high: 'bg-orange-100 text-orange-800',
   urgent: 'bg-red-100 text-red-800',
 };
+
+// Aree dreamteam
+export const departmentLabels: Record<string, string> = {
+  management: 'Management',
+  marketing: 'Marketing',
+  finance: 'Finance',
+  branding: 'Branding',
+  hr: 'HR',
+  ai: 'AI',
+};
+
+export const departmentColors: Record<string, string> = {
+  management: 'var(--dt-management)',
+  marketing: 'var(--dt-marketing)',
+  finance: 'var(--dt-finance)',
+  branding: 'var(--dt-branding)',
+  hr: 'var(--dt-hr)',
+  ai: 'var(--dt-ai)',
+};
+
+export const departmentBadgeClasses: Record<string, string> = {
+  management: 'bg-[#D5C8B8]/15 text-[#A09080] border-[#D5C8B8]/30',
+  marketing: 'bg-[#D05A5A]/10 text-[#D05A5A] border-[#D05A5A]/20',
+  finance: 'bg-[#7A8B5E]/10 text-[#7A8B5E] border-[#7A8B5E]/20',
+  branding: 'bg-[#9B8EBD]/10 text-[#9B8EBD] border-[#9B8EBD]/20',
+  hr: 'bg-[#BCC8B8]/15 text-[#8A9A86] border-[#BCC8B8]/30',
+  ai: 'bg-[#7B9BBF]/10 text-[#7B9BBF] border-[#7B9BBF]/20',
+};
+
+export const departmentOptions = [
+  { value: '', label: 'Nessuna area' },
+  { value: 'management', label: 'Management' },
+  { value: 'marketing', label: 'Marketing' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'branding', label: 'Branding' },
+  { value: 'hr', label: 'HR' },
+  { value: 'ai', label: 'AI' },
+];

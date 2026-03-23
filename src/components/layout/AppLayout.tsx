@@ -38,7 +38,7 @@ export function AppLayout() {
           <Menu className="h-5 w-5" />
         </button>
         <div className="flex items-center gap-2 ml-2">
-          <img src="/logo.svg" alt="dreamteam" className="h-7 w-7" />
+          <img src="/logo.png" alt="dreamteam" className="h-7 w-7" />
           <span className="text-sm font-light">dream</span>
           <span className="text-sm font-bold -ml-1">team</span>
         </div>

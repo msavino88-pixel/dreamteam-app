@@ -7,12 +7,14 @@ export type Priority = 'low' | 'medium' | 'high' | 'urgent';
 export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done';
 export type IdeaStatus = 'new' | 'evaluating' | 'approved' | 'rejected' | 'implemented';
 export type ProjectMemberRole = 'lead' | 'member';
+export type Department = 'management' | 'marketing' | 'finance' | 'branding' | 'hr' | 'ai';
 
 export interface User {
   id: string;
   email: string;
   full_name: string;
   role: UserRole;
+  department: Department | null;
   avatar_url: string | null;
   phone: string | null;
   is_active: boolean;
@@ -92,6 +94,18 @@ export interface Project {
   client?: Client;
   members?: ProjectMember[];
   tasks?: Task[];
+}
+
+export interface ProjectTemplate {
+  id: string;
+  name: string;
+  description: string | null;
+  priority: Priority;
+  budget: number | null;
+  default_tasks: { title: string; priority: string }[];
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ProjectMember {
