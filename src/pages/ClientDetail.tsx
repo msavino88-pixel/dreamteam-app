@@ -1,20 +1,32 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { SpendingChart } from '@/components/clients/SpendingChart';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useClient } from '@/hooks/useClients';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useClient, useUpdateClient } from '@/hooks/useClients';
 import { useSpending } from '@/hooks/useSpending';
 import { useInteractions } from '@/hooks/useInteractions';
 import { useProjects } from '@/hooks/useProjects';
 import { useUsers } from '@/hooks/useUsers';
 import { calculateClientMetrics } from '@/lib/analytics';
 import { formatCurrency, formatDate, formatRelativeDate, statusLabels, statusColors } from '@/lib/formatting';
+import type { Client } from '@/types';
 import {
   ArrowLeft, Building2, Mail, Phone, MapPin, Globe, FileText,
-  TrendingUp, AlertTriangle, Clock, MessageSquare, Euro
+  TrendingUp, AlertTriangle, Clock, MessageSquare, Euro, Pencil, Save, CheckCircle2
 } from 'lucide-react';
+
+const statusOptions = [
+  { value: 'active', label: 'Attivo' },
+  { value: 'inactive', label: 'Inattivo' },
+  { value: 'lead', label: 'Lead' },
+  { value: 'churned', label: 'Perso' },
+];
 
 export default function ClientDetail() {
   const { id } = useParams();
@@ -43,6 +55,41 @@ export default function ClientDetail() {
       </div>
     );
   }
+
+  const updateClient = useUpdateClient();
+  const [editOpen, setEditOpen] = useState(false);
+  const [editForm, setEditForm] = useState<Partial<Client>>({});
+  const [editMsg, setEditMsg] = useState('');
+
+  const openEdit = () => {
+    setEditForm({
+      company_name: client.company_name,
+      contact_name: client.contact_name,
+      email: client.email,
+      phone: client.phone,
+      address: client.address,
+      city: client.city,
+      industry: client.industry,
+      vat_number: client.vat_number,
+      website: client.website,
+      notes: client.notes,
+      status: client.status,
+      assigned_to: client.assigned_to,
+      source: client.source,
+    });
+    setEditMsg('');
+    setEditOpen(true);
+  };
+
+  const handleSaveClient = async () => {
+    try {
+      await updateClient.mutateAsync({ id: client.id, ...editForm });
+      setEditMsg('Salvato!');
+      setTimeout(() => { setEditOpen(false); setEditMsg(''); }, 800);
+    } catch (err: unknown) {
+      setEditMsg(`Errore: ${err instanceof Error ? err.message : 'sconosciuto'}`);
+    }
+  };
 
   const projects = allProjects.filter(p => p.client_id === client.id);
   const activeProjectCount = projects.filter(p => p.status === 'active').length;
@@ -75,6 +122,9 @@ export default function ClientDetail() {
               {assignee && <p className="text-sm text-muted-foreground">Gestito da: {assignee.full_name}</p>}
             </div>
           </div>
+          <Button variant="outline" size="sm" onClick={openEdit} className="gap-2">
+            <Pencil className="h-4 w-4" /> Modifica
+          </Button>
         </div>
 
         {/* Metriche KPI */}
@@ -238,6 +288,113 @@ export default function ClientDetail() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Edit Client Modal */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent onClose={() => setEditOpen(false)} className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Modifica Cliente</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Azienda</label>
+                <Input value={editForm.company_name || ''} onChange={e => setEditForm(f => ({ ...f, company_name: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Referente</label>
+                <Input value={editForm.contact_name || ''} onChange={e => setEditForm(f => ({ ...f, contact_name: e.target.value }))} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Email</label>
+                <Input type="email" value={editForm.email || ''} onChange={e => setEditForm(f => ({ ...f, email: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Telefono</label>
+                <Input value={editForm.phone || ''} onChange={e => setEditForm(f => ({ ...f, phone: e.target.value }))} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Indirizzo</label>
+                <Input value={editForm.address || ''} onChange={e => setEditForm(f => ({ ...f, address: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Città</label>
+                <Input value={editForm.city || ''} onChange={e => setEditForm(f => ({ ...f, city: e.target.value }))} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Settore</label>
+                <Input value={editForm.industry || ''} onChange={e => setEditForm(f => ({ ...f, industry: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">P.IVA</label>
+                <Input value={editForm.vat_number || ''} onChange={e => setEditForm(f => ({ ...f, vat_number: e.target.value }))} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Sito Web</label>
+                <Input value={editForm.website || ''} onChange={e => setEditForm(f => ({ ...f, website: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Fonte</label>
+                <Input value={editForm.source || ''} onChange={e => setEditForm(f => ({ ...f, source: e.target.value }))} placeholder="Referral, LinkedIn, Evento..." />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Stato</label>
+                <Select options={statusOptions} value={editForm.status || 'active'} onChange={e => setEditForm(f => ({ ...f, status: e.target.value as Client['status'] }))} />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Assegnato a</label>
+                <Select
+                  options={[{ value: '', label: 'Nessuno' }, ...users.map(u => ({ value: u.id, label: u.full_name }))]}
+                  value={editForm.assigned_to || ''}
+                  onChange={e => setEditForm(f => ({ ...f, assigned_to: e.target.value || null }))}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Note</label>
+              <textarea
+                className="w-full min-h-[80px] rounded-2xl bg-card border border-input px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-y"
+                value={editForm.notes || ''}
+                onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))}
+                placeholder="Note sul cliente..."
+              />
+            </div>
+
+            {editMsg && (
+              <div className={`p-2.5 rounded-xl text-sm ${editMsg.startsWith('Errore') ? 'bg-destructive/10 text-destructive' : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'}`}>
+                {!editMsg.startsWith('Errore') && <CheckCircle2 className="inline h-4 w-4 mr-1" />}
+                {editMsg}
+              </div>
+            )}
+
+            <div className="flex gap-2 pt-2">
+              <Button onClick={handleSaveClient} disabled={updateClient.isPending || !editForm.company_name?.trim()} className="flex-1 gap-2">
+                <Save className="h-4 w-4" />
+                {updateClient.isPending ? 'Salvataggio...' : 'Salva Modifiche'}
+              </Button>
+              <Button variant="outline" onClick={() => setEditOpen(false)}>
+                Annulla
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
