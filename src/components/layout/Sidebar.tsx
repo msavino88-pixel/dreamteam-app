@@ -51,10 +51,10 @@ export function Sidebar({ mobileOpen, onMobileClose, collapsed, onToggleCollapse
         {/* Header */}
         <div className={cn("flex items-center py-6", isCollapsed ? "justify-center px-3" : "justify-between px-5")}>
           {isCollapsed ? (
-            <img src="/logo.svg" alt="dreamteam" className="h-8 w-8" />
+            <img src="/logo.png" alt="dreamteam" className="h-8 w-8" />
           ) : (
             <div className="flex items-center gap-2.5">
-              <img src="/logo.svg" alt="dreamteam" className="h-9 w-9" />
+              <img src="/logo.png" alt="dreamteam" className="h-9 w-9" />
               <div>
                 <span className="text-base font-light tracking-wide text-foreground">dream</span>
                 <span className="text-base font-bold tracking-wide text-foreground">team</span>
@@ -93,29 +93,6 @@ export function Sidebar({ mobileOpen, onMobileClose, collapsed, onToggleCollapse
             </NavLink>
           ))}
         </nav>
-
-        {/* Color bar */}
-        <div className={cn("pb-2", isCollapsed ? "px-2" : "px-4")}>
-          {isCollapsed ? (
-            <div className="flex flex-col gap-1 items-center">
-              {[
-                'var(--dt-management)', 'var(--dt-marketing)', 'var(--dt-finance)',
-                'var(--dt-branding)', 'var(--dt-hr)', 'var(--dt-ai)'
-              ].map((color, i) => (
-                <div key={i} className="h-1 w-4 rounded-full" style={{ background: color }} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex gap-1 mb-3">
-              <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-management)' }} />
-              <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-marketing)' }} />
-              <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-finance)' }} />
-              <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-branding)' }} />
-              <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-hr)' }} />
-              <div className="h-1 flex-1 rounded-full" style={{ background: 'var(--dt-ai)' }} />
-            </div>
-          )}
-        </div>
 
         {/* Collapse toggle (desktop only) */}
         {!isMobile && onToggleCollapse && (
