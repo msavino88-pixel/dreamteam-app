@@ -158,7 +158,7 @@ export function Sidebar({ mobileOpen, onMobileClose, collapsed, onToggleCollapse
   return (
     <>
       {/* Desktop */}
-      <div className="hidden lg:block fixed left-0 top-0 z-40" style={{ pointerEvents: 'auto' }}>
+      <div className="hidden lg:block fixed left-0 top-0 z-40 h-screen" style={{ isolation: 'isolate' }}>
         {sidebarContent(false)}
       </div>
 

@@ -44,27 +44,18 @@ export function AppLayout() {
         </div>
       </div>
 
+      {/* Dynamic sidebar margin via CSS media query */}
+      <style>{`
+        @media (min-width: 1024px) {
+          #main-area { margin-left: ${collapsed ? 72 : 260}px; }
+        }
+      `}</style>
+
       <main
+        id="main-area"
         className="pt-14 lg:pt-0 pb-6 transition-[margin] duration-300"
-        style={{ marginLeft: undefined }}
       >
-        {/* Use CSS class for mobile, inline style for desktop responsive sidebar */}
-        <div
-          className="transition-[margin] duration-300"
-          style={{
-            // On desktop (lg+), apply sidebar margin. On mobile, 0.
-            // We use a CSS media query approach via a wrapper
-          }}
-        >
-          <style>{`
-            @media (min-width: 1024px) {
-              #main-content { margin-left: ${collapsed ? 72 : 260}px; }
-            }
-          `}</style>
-          <div id="main-content" className="transition-[margin] duration-300 relative z-0">
-            <Outlet />
-          </div>
-        </div>
+        <Outlet />
       </main>
     </div>
   );
