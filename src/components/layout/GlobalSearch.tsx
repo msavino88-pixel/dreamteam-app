@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { useClients } from '@/hooks/useClients';
@@ -54,24 +54,24 @@ export function GlobalSearch({ mobile, onNavigate }: GlobalSearchProps) {
   const { data: ideas = [] } = useIdeas();
 
   useEffect(() => {
-    if (mobile) {
-      inputRef.current?.focus();
+    if (mobile) inputRef.current?.focus();
+  }, [mobile]);
+
+  // Close on outside click — only when dropdown is open
+  const handleOutsideClick = useCallback((e: MouseEvent) => {
+    if (ref.current && !ref.current.contains(e.target as Node)) {
+      setOpen(false);
     }
-  }, [mobile]);
+  }, []);
 
-  // Close on outside click (desktop only)
   useEffect(() => {
-    if (mobile) return;
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [mobile]);
+    if (!mobile && open) {
+      document.addEventListener('mousedown', handleOutsideClick);
+      return () => document.removeEventListener('mousedown', handleOutsideClick);
+    }
+  }, [mobile, open, handleOutsideClick]);
 
-  // Keyboard shortcut: Cmd/Ctrl+K
+  // Keyboard shortcut
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -137,10 +137,7 @@ export function GlobalSearch({ mobile, onNavigate }: GlobalSearchProps) {
             className="w-full pl-12 pr-10 h-13 text-base rounded-2xl bg-card"
           />
           {query && (
-            <button
-              onClick={() => setQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground"
-            >
+            <button type="button" onClick={() => setQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground">
               <X className="h-4 w-4" />
             </button>
           )}
@@ -167,7 +164,7 @@ export function GlobalSearch({ mobile, onNavigate }: GlobalSearchProps) {
             );
           })}
           {query.length >= 2 && results.length === 0 && (
-            <p className="text-center text-sm text-muted-foreground py-8">Nessun risultato per "{query}"</p>
+            <p className="text-center text-sm text-muted-foreground py-8">Nessun risultato per &quot;{query}&quot;</p>
           )}
         </div>
       </div>
@@ -188,6 +185,7 @@ export function GlobalSearch({ mobile, onNavigate }: GlobalSearchProps) {
       />
       {query && (
         <button
+          type="button"
           onClick={() => { setQuery(''); setOpen(false); }}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
         >
@@ -221,7 +219,7 @@ export function GlobalSearch({ mobile, onNavigate }: GlobalSearchProps) {
 
       {open && query.length >= 2 && results.length === 0 && (
         <div className="absolute top-full mt-2 left-0 right-0 bg-card rounded-[28px] shadow-float overflow-hidden z-50 p-6 text-center border-0">
-          <p className="text-sm text-muted-foreground">Nessun risultato per "{query}"</p>
+          <p className="text-sm text-muted-foreground">Nessun risultato per &quot;{query}&quot;</p>
         </div>
       )}
     </div>

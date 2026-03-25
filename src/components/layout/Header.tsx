@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Plus, X, AlertTriangle, Clock, Info, CheckCheck, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { GlobalSearch } from './GlobalSearch';
 import { useNotifications, type Notification } from '@/contexts/NotificationContext';
 
@@ -33,15 +32,19 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
   const { notifications, unreadCount, markRead, markAllRead } = useNotifications();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
-        setNotifOpen(false);
-      }
+  // Close notifications on outside click — stable ref-based handler
+  const handleDocClick = useCallback((e: MouseEvent) => {
+    if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+      setNotifOpen(false);
     }
-    if (notifOpen) document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, [notifOpen]);
+  }, []);
+
+  useEffect(() => {
+    if (notifOpen) {
+      document.addEventListener('mousedown', handleDocClick);
+      return () => document.removeEventListener('mousedown', handleDocClick);
+    }
+  }, [notifOpen, handleDocClick]);
 
   const handleNotifClick = (n: Notification) => {
     markRead(n.id);
@@ -57,6 +60,7 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
       {mobileSearchOpen && (
         <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl p-4 pt-20 md:hidden">
           <button
+            type="button"
             onClick={() => setMobileSearchOpen(false)}
             className="absolute top-5 right-4 p-2 rounded-2xl bg-muted"
           >
@@ -118,11 +122,11 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
                   <h3 className="text-sm font-semibold">Notifiche</h3>
                   <div className="flex items-center gap-2">
                     {unreadCount > 0 && (
-                      <button onClick={markAllRead} className="text-xs text-accent hover:underline flex items-center gap-1">
+                      <button type="button" onClick={markAllRead} className="text-xs text-accent hover:underline flex items-center gap-1">
                         <CheckCheck className="h-3 w-3" /> Segna lette
                       </button>
                     )}
-                    <button onClick={() => setNotifOpen(false)} className="p-1.5 rounded-xl hover:bg-muted">
+                    <button type="button" onClick={() => setNotifOpen(false)} className="p-1.5 rounded-xl hover:bg-muted">
                       <X className="h-4 w-4 text-muted-foreground" />
                     </button>
                   </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Sidebar } from './Sidebar';
+import { Sidebar, MobileSidebar } from './Sidebar';
 import { Menu } from 'lucide-react';
 
 const COLLAPSED_KEY = 'sidebar-collapsed';
@@ -20,18 +20,20 @@ export function AppLayout() {
     });
   };
 
+  const sidebarWidth = collapsed ? 72 : 260;
+
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar
-        mobileOpen={mobileMenuOpen}
-        onMobileClose={() => setMobileMenuOpen(false)}
-        collapsed={collapsed}
-        onToggleCollapse={toggleCollapse}
-      />
+      {/* Desktop sidebar */}
+      <Sidebar collapsed={collapsed} onToggleCollapse={toggleCollapse} />
+
+      {/* Mobile sidebar */}
+      <MobileSidebar open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
 
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-30 h-14 flex items-center px-4 bg-background/90 backdrop-blur-xl border-b border-border/30">
         <button
+          type="button"
           onClick={() => setMobileMenuOpen(true)}
           className="p-2.5 -ml-1 rounded-2xl hover:bg-muted active:scale-95 transition-all"
         >
@@ -44,18 +46,15 @@ export function AppLayout() {
         </div>
       </div>
 
-      {/* Dynamic sidebar margin via CSS media query */}
-      <style>{`
-        @media (min-width: 1024px) {
-          #main-area { margin-left: ${collapsed ? 72 : 260}px; }
-        }
-      `}</style>
-
+      {/* Main content */}
       <main
-        id="main-area"
         className="pt-14 lg:pt-0 pb-6 transition-[margin] duration-300"
+        style={{ marginLeft: undefined }}
       >
-        <Outlet />
+        <style>{`@media(min-width:1024px){#app-main{margin-left:${sidebarWidth}px}}`}</style>
+        <div id="app-main" className="transition-[margin] duration-300">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
