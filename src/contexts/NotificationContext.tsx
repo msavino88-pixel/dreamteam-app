@@ -1,7 +1,6 @@
-import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useAllTasks } from '@/hooks/useTasks';
 import { useProjects } from '@/hooks/useProjects';
-import { useClients } from '@/hooks/useClients';
 
 export interface Notification {
   id: string;
@@ -26,17 +25,18 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const prevIdsRef = useRef('');
-  const { data: tasks = [] } = useAllTasks();
-  const { data: projects = [] } = useProjects();
-  const { data: clients = [] } = useClients();
+  const { data: tasks } = useAllTasks();
+  const { data: projects } = useProjects();
 
-  // Generate notifications based on data
+  // Generate notifications — only when data IDs actually change
   useEffect(() => {
+    if (!tasks || !projects) return;
+
     const now = new Date();
     const generated: Notification[] = [];
 
     // Overdue tasks
-    tasks.forEach(task => {
+    for (const task of tasks) {
       if (task.status !== 'done' && task.due_date) {
         const due = new Date(task.due_date);
         const daysUntil = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
@@ -46,7 +46,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
             id: `overdue-${task.id}`,
             type: 'overdue',
             title: 'Task scaduta',
-            message: `"${task.title}" e scaduta da ${Math.abs(daysUntil)} giorni`,
+            message: `"${task.title}" è scaduta da ${Math.abs(daysUntil)} giorni`,
             read: false,
             created_at: now.toISOString(),
             link: task.project_id ? `/projects/${task.project_id}` : undefined,
@@ -63,10 +63,10 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           });
         }
       }
-    });
+    }
 
     // Projects ending soon
-    projects.forEach(project => {
+    for (const project of projects) {
       if (project.status === 'active' && project.end_date) {
         const end = new Date(project.end_date);
         const daysUntil = Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
@@ -82,28 +82,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           });
         }
       }
-    });
+    }
 
-    // Inactive clients warning
-    clients.forEach(client => {
-      if (client.status === 'active') {
-        const lastUpdate = new Date(client.updated_at);
-        const daysSince = Math.floor((now.getTime() - lastUpdate.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysSince > 60) {
-          generated.push({
-            id: `inactive-client-${client.id}`,
-            type: 'info',
-            title: 'Cliente inattivo',
-            message: `${client.company_name}: nessuna attivita da ${daysSince} giorni`,
-            read: false,
-            created_at: now.toISOString(),
-            link: `/clients/${client.id}`,
-          });
-        }
-      }
-    });
-
-    // Only update if notification IDs changed
+    // Only update state if notification IDs changed
     const newIds = generated.map(n => n.id).sort().join(',');
     if (newIds !== prevIdsRef.current) {
       prevIdsRef.current = newIds;
@@ -112,9 +93,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         return generated.map(n => ({ ...n, read: readIds.has(n.id) }));
       });
     }
-  }, [tasks, projects, clients]);
+  }, [tasks, projects]);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = useMemo(() => notifications.filter(n => !n.read).length, [notifications]);
 
   const markRead = useCallback((id: string) => {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
@@ -128,8 +109,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     setNotifications(prev => prev.filter(n => n.id !== id));
   }, []);
 
+  const value = useMemo(() => ({
+    notifications, unreadCount, markRead, markAllRead, dismissNotification
+  }), [notifications, unreadCount, markRead, markAllRead, dismissNotification]);
+
   return (
-    <NotificationContext.Provider value={{ notifications, unreadCount, markRead, markAllRead, dismissNotification }}>
+    <NotificationContext.Provider value={value}>
       {children}
     </NotificationContext.Provider>
   );

@@ -11,7 +11,6 @@ import { useAllTasks } from '@/hooks/useTasks';
 import { useAllSpending } from '@/hooks/useSpending';
 import { useCreateIdea } from '@/hooks/useIdeas';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRealtimeSubscription } from '@/hooks/useRealtimeSubscription';
 import { formatCurrency, formatDate } from '@/lib/formatting';
 import {
   Users,
@@ -28,7 +27,6 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [ideaOpen, setIdeaOpen] = useState(false);
   const { profile } = useAuth();
-  useRealtimeSubscription();
 
   const { data: clients = [] } = useClients();
   const { data: projects = [] } = useProjects();

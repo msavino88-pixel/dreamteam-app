@@ -4,6 +4,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AppLayout } from '@/components/layout/AppLayout';
 import Dashboard from '@/pages/Dashboard';
 import Clients from '@/pages/Clients';
@@ -21,44 +22,47 @@ import MyWork from '@/pages/MyWork';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60,
-      retry: 1,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: false,
+      refetchOnWindowFocus: false,
     },
   },
 });
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route element={
-                <ProtectedRoute>
-                  <NotificationProvider>
-                    <AppLayout />
-                  </NotificationProvider>
-                </ProtectedRoute>
-              }>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/my-work" element={<MyWork />} />
-                <Route path="/clients" element={<Clients />} />
-                <Route path="/clients/new" element={<ClientNew />} />
-                <Route path="/clients/:id" element={<ClientDetail />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/projects/new" element={<ProjectNew />} />
-                <Route path="/projects/:id" element={<ProjectDetail />} />
-                <Route path="/ideas" element={<Ideas />} />
-                <Route path="/team" element={<Team />} />
-                <Route path="/settings" element={<Settings />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route element={
+                  <ProtectedRoute>
+                    <NotificationProvider>
+                      <AppLayout />
+                    </NotificationProvider>
+                  </ProtectedRoute>
+                }>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/my-work" element={<MyWork />} />
+                  <Route path="/clients" element={<Clients />} />
+                  <Route path="/clients/new" element={<ClientNew />} />
+                  <Route path="/clients/:id" element={<ClientDetail />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/projects/new" element={<ProjectNew />} />
+                  <Route path="/projects/:id" element={<ProjectDetail />} />
+                  <Route path="/ideas" element={<Ideas />} />
+                  <Route path="/team" element={<Team />} />
+                  <Route path="/settings" element={<Settings />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
