@@ -96,13 +96,22 @@
   }
 }
 
-/* Sidebar layout — pure CSS, no dynamic style tags */
+/* ── App Grid Layout ── */
 @media (min-width: 1024px) {
-  .sidebar-expanded .app-main {
-    margin-left: 260px;
+  .app-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    min-height: 100vh;
   }
-  .sidebar-collapsed .app-main {
-    margin-left: 72px;
+  .app-sidebar {
+    width: 260px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    transition: width 0.3s ease;
+  }
+  .app-sidebar.collapsed {
+    width: 72px;
   }
 }
 

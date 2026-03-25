@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -37,32 +37,19 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
   const { profile, signOut } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('') || '?';
 
   const isActive = (href: string) =>
-    href === '/' ? location.pathname === '/' : location.pathname.startsWith(href);
-
-  // Use <a> tags for native browser behavior + navigate for SPA
-  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    navigate(href);
-  }, [navigate]);
+    href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   const handleLogout = useCallback(async () => {
     await signOut();
-    navigate('/login');
-  }, [signOut, navigate]);
+    window.location.href = '/login';
+  }, [signOut]);
 
   return (
-    <aside
-      className={cn(
-        "hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-card border-r border-border/50 z-40",
-        "transition-[width] duration-300",
-        collapsed ? "w-[72px]" : "w-[260px]"
-      )}
-    >
+    <aside className={cn("app-sidebar hidden lg:flex flex-col bg-card border-r border-border/50 overflow-hidden", collapsed && "collapsed")}>
       {/* Header */}
       <div className={cn("flex items-center py-6 shrink-0", collapsed ? "justify-center px-3" : "justify-between px-5")}>
         {collapsed ? (
@@ -79,15 +66,14 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
         )}
       </div>
 
-      {/* Nav — using <a> tags for maximum click reliability */}
+      {/* Nav — using react-router <Link> for reliable SPA navigation */}
       <nav className={cn("flex-1 flex flex-col gap-1 mt-1 overflow-y-auto", collapsed ? "px-2" : "px-3")}>
         {navigation.map((item) => {
           const active = isActive(item.href);
           return (
-            <a
+            <Link
               key={item.name}
-              href={item.href}
-              onClick={(e) => handleClick(e, item.href)}
+              to={item.href}
               title={collapsed ? item.name : undefined}
               className={cn(
                 'flex items-center rounded-2xl text-sm font-medium transition-colors duration-200 no-underline',
@@ -99,7 +85,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
             >
               <item.icon className={cn("shrink-0", collapsed ? "h-5 w-5" : "h-[18px] w-[18px]")} />
               {!collapsed && <span>{item.name}</span>}
-            </a>
+            </Link>
           );
         })}
       </nav>
@@ -158,24 +144,17 @@ interface MobileSidebarProps {
 
 export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
   const { profile, signOut } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('') || '?';
 
   const isActive = (href: string) =>
-    href === '/' ? location.pathname === '/' : location.pathname.startsWith(href);
-
-  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    navigate(href);
-    onClose();
-  }, [navigate, onClose]);
+    href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/30" onClick={onClose} />
       <aside className="fixed left-0 top-0 z-50 h-screen w-[260px] flex flex-col bg-card border-r border-border/50">
         <div className="flex items-center justify-between px-5 py-6 shrink-0">
           <div className="flex items-center gap-2.5">
@@ -195,10 +174,10 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
           {navigation.map((item) => {
             const active = isActive(item.href);
             return (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
-                onClick={(e) => handleClick(e, item.href)}
+                to={item.href}
+                onClick={onClose}
                 className={cn(
                   'flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-colors duration-200 no-underline',
                   active
@@ -208,7 +187,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
               >
                 <item.icon className="h-[18px] w-[18px] shrink-0" />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             );
           })}
         </nav>
@@ -222,7 +201,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
               <p className="text-sm font-medium text-foreground truncate">{profile?.full_name || 'Utente'}</p>
               <p className="text-[11px] text-muted-foreground">{roleLabels[profile?.role || 'consultant']}</p>
             </div>
-            <button type="button" onClick={async () => { await signOut(); navigate('/login'); }} className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="Esci">
+            <button type="button" onClick={async () => { await signOut(); window.location.href = '/login'; }} className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="Esci">
               <LogOut className="h-4 w-4" />
             </button>
           </div>

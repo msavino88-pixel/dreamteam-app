@@ -24,32 +24,35 @@ export function AppLayout() {
   const closeMobile = useCallback(() => setMobileMenuOpen(false), []);
 
   return (
-    <div className={collapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}>
-      {/* Desktop sidebar — isolated fixed element */}
+    <div className="app-grid min-h-screen bg-background">
+      {/* Desktop sidebar — sticky in grid, NOT fixed */}
       <Sidebar collapsed={collapsed} onToggleCollapse={toggleCollapse} />
 
-      {/* Mobile sidebar — portal-like overlay */}
+      {/* Mobile sidebar — overlay */}
       <MobileSidebar open={mobileMenuOpen} onClose={closeMobile} />
 
-      {/* Mobile top bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 h-14 flex items-center px-4 bg-background/90 backdrop-blur-xl border-b border-border/30">
-        <button
-          type="button"
-          onClick={openMobile}
-          className="p-2.5 -ml-1 rounded-2xl hover:bg-muted active:scale-95 transition-all"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-        <div className="flex items-center gap-2 ml-2">
-          <img src="/logo.png" alt="dreamteam" className="h-7 w-7" />
-          <span className="text-sm font-light">dream</span>
-          <span className="text-sm font-bold -ml-1">team</span>
+      {/* Main column */}
+      <div className="min-w-0">
+        {/* Mobile top bar */}
+        <div className="lg:hidden sticky top-0 z-30 h-14 flex items-center px-4 bg-background/90 backdrop-blur-xl border-b border-border/30">
+          <button
+            type="button"
+            onClick={openMobile}
+            className="p-2.5 -ml-1 rounded-2xl hover:bg-muted active:scale-95 transition-all"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <div className="flex items-center gap-2 ml-2">
+            <img src="/logo.png" alt="dreamteam" className="h-7 w-7" />
+            <span className="text-sm font-light">dream</span>
+            <span className="text-sm font-bold -ml-1">team</span>
+          </div>
         </div>
-      </div>
 
-      {/* Main content — margin handled by CSS classes, NOT inline styles */}
-      <div className="app-main pt-14 lg:pt-0 pb-6 transition-[margin] duration-300">
-        <Outlet />
+        {/* Page content */}
+        <main className="pb-6">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

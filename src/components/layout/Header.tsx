@@ -55,7 +55,7 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-14 lg:top-0 z-20 bg-background/90 backdrop-blur-xl px-4 md:px-6 py-3 md:py-4">
+    <header className="sticky top-0 z-20 bg-background/90 backdrop-blur-xl px-4 md:px-6 py-3 md:py-4">
       {/* Mobile search overlay */}
       {mobileSearchOpen && (
         <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl p-4 pt-20 md:hidden">
