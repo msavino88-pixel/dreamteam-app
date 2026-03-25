@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import React, { useCallback } from 'react';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -27,6 +28,8 @@ const navigation = [
 
 const roleLabels: Record<string, string> = { admin: 'Admin', manager: 'Manager', consultant: 'Consulente' };
 
+/* ─────────────── Desktop Sidebar ─────────────── */
+
 interface SidebarProps {
   collapsed: boolean;
   onToggleCollapse: () => void;
@@ -38,29 +41,30 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
   const navigate = useNavigate();
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('') || '?';
 
-  const isActive = (href: string) => {
-    if (href === '/') return location.pathname === '/';
-    return location.pathname.startsWith(href);
-  };
+  const isActive = (href: string) =>
+    href === '/' ? location.pathname === '/' : location.pathname.startsWith(href);
 
-  const handleNav = (href: string) => {
+  // Use <a> tags for native browser behavior + navigate for SPA
+  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
     navigate(href);
-  };
+  }, [navigate]);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await signOut();
     navigate('/login');
-  };
+  }, [signOut, navigate]);
 
   return (
     <aside
       className={cn(
-        "hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-card border-r border-border/50 transition-all duration-300 z-40",
+        "hidden lg:flex fixed left-0 top-0 h-screen flex-col bg-card border-r border-border/50 z-40",
+        "transition-[width] duration-300",
         collapsed ? "w-[72px]" : "w-[260px]"
       )}
     >
       {/* Header */}
-      <div className={cn("flex items-center py-6", collapsed ? "justify-center px-3" : "justify-between px-5")}>
+      <div className={cn("flex items-center py-6 shrink-0", collapsed ? "justify-center px-3" : "justify-between px-5")}>
         {collapsed ? (
           <img src="/logo.png" alt="dreamteam" className="h-8 w-8" />
         ) : (
@@ -75,18 +79,18 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
         )}
       </div>
 
-      {/* Nav */}
+      {/* Nav — using <a> tags for maximum click reliability */}
       <nav className={cn("flex-1 flex flex-col gap-1 mt-1 overflow-y-auto", collapsed ? "px-2" : "px-3")}>
         {navigation.map((item) => {
           const active = isActive(item.href);
           return (
-            <button
+            <a
               key={item.name}
-              type="button"
-              onClick={() => handleNav(item.href)}
+              href={item.href}
+              onClick={(e) => handleClick(e, item.href)}
               title={collapsed ? item.name : undefined}
               className={cn(
-                'flex items-center rounded-2xl text-sm font-medium transition-all duration-200 w-full text-left',
+                'flex items-center rounded-2xl text-sm font-medium transition-colors duration-200 no-underline',
                 collapsed ? 'justify-center px-0 py-3' : 'gap-3 px-4 py-3',
                 active
                   ? 'bg-primary text-primary-foreground shadow-glow'
@@ -94,14 +98,14 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
               )}
             >
               <item.icon className={cn("shrink-0", collapsed ? "h-5 w-5" : "h-[18px] w-[18px]")} />
-              {!collapsed && item.name}
-            </button>
+              {!collapsed && <span>{item.name}</span>}
+            </a>
           );
         })}
       </nav>
 
       {/* Collapse toggle */}
-      <div className={cn("px-3 pb-2", collapsed && "flex justify-center")}>
+      <div className={cn("px-3 pb-2 shrink-0", collapsed && "flex justify-center")}>
         <button
           type="button"
           onClick={onToggleCollapse}
@@ -111,30 +115,18 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
           )}
           title={collapsed ? 'Espandi' : 'Riduci'}
         >
-          {collapsed ? (
-            <ChevronsRight className="h-4 w-4" />
-          ) : (
-            <>
-              <ChevronsLeft className="h-4 w-4" />
-              <span>Riduci</span>
-            </>
-          )}
+          {collapsed ? <ChevronsRight className="h-4 w-4" /> : <><ChevronsLeft className="h-4 w-4" /><span>Riduci</span></>}
         </button>
       </div>
 
       {/* User */}
-      <div className={cn("border-t border-border/50 py-4", collapsed ? "px-2" : "px-4")}>
+      <div className={cn("border-t border-border/50 py-4 shrink-0", collapsed ? "px-2" : "px-4")}>
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-purple)] to-primary text-sm font-semibold text-white">
               {initials}
             </div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              title="Esci"
-            >
+            <button type="button" onClick={handleLogout} className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="Esci">
               <LogOut className="h-4 w-4" />
             </button>
           </div>
@@ -147,12 +139,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
               <p className="text-sm font-medium text-foreground truncate">{profile?.full_name || 'Utente'}</p>
               <p className="text-[11px] text-muted-foreground">{roleLabels[profile?.role || 'consultant']}</p>
             </div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              title="Esci"
-            >
+            <button type="button" onClick={handleLogout} className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="Esci">
               <LogOut className="h-4 w-4" />
             </button>
           </div>
@@ -162,7 +149,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
   );
 }
 
-/* ── Mobile Sidebar (separate component, no shared state) ── */
+/* ─────────────── Mobile Sidebar ─────────────── */
 
 interface MobileSidebarProps {
   open: boolean;
@@ -175,15 +162,14 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
   const navigate = useNavigate();
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('') || '?';
 
-  const isActive = (href: string) => {
-    if (href === '/') return location.pathname === '/';
-    return location.pathname.startsWith(href);
-  };
+  const isActive = (href: string) =>
+    href === '/' ? location.pathname === '/' : location.pathname.startsWith(href);
 
-  const handleNav = (href: string) => {
+  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
     navigate(href);
     onClose();
-  };
+  }, [navigate, onClose]);
 
   if (!open) return null;
 
@@ -191,8 +177,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
     <div className="fixed inset-0 z-50 lg:hidden">
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
       <aside className="fixed left-0 top-0 z-50 h-screen w-[260px] flex flex-col bg-card border-r border-border/50">
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 py-6">
+        <div className="flex items-center justify-between px-5 py-6 shrink-0">
           <div className="flex items-center gap-2.5">
             <img src="/logo.png" alt="dreamteam" className="h-9 w-9" />
             <div>
@@ -206,31 +191,29 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
           </button>
         </div>
 
-        {/* Nav */}
         <nav className="flex-1 flex flex-col gap-1 mt-1 overflow-y-auto px-3">
           {navigation.map((item) => {
             const active = isActive(item.href);
             return (
-              <button
+              <a
                 key={item.name}
-                type="button"
-                onClick={() => handleNav(item.href)}
+                href={item.href}
+                onClick={(e) => handleClick(e, item.href)}
                 className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 w-full text-left',
+                  'flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-colors duration-200 no-underline',
                   active
                     ? 'bg-primary text-primary-foreground shadow-glow'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
                 <item.icon className="h-[18px] w-[18px] shrink-0" />
-                {item.name}
-              </button>
+                <span>{item.name}</span>
+              </a>
             );
           })}
         </nav>
 
-        {/* User */}
-        <div className="border-t border-border/50 py-4 px-4">
+        <div className="border-t border-border/50 py-4 px-4 shrink-0">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-purple)] to-primary text-sm font-semibold text-white shrink-0">
               {initials}
@@ -239,12 +222,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
               <p className="text-sm font-medium text-foreground truncate">{profile?.full_name || 'Utente'}</p>
               <p className="text-[11px] text-muted-foreground">{roleLabels[profile?.role || 'consultant']}</p>
             </div>
-            <button
-              type="button"
-              onClick={async () => { await signOut(); navigate('/login'); }}
-              className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              title="Esci"
-            >
+            <button type="button" onClick={async () => { await signOut(); navigate('/login'); }} className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="Esci">
               <LogOut className="h-4 w-4" />
             </button>
           </div>

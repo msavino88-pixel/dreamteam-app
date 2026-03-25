@@ -96,6 +96,16 @@
   }
 }
 
+/* Sidebar layout — pure CSS, no dynamic style tags */
+@media (min-width: 1024px) {
+  .sidebar-expanded .app-main {
+    margin-left: 260px;
+  }
+  .sidebar-collapsed .app-main {
+    margin-left: 72px;
+  }
+}
+
 /* Scrollbar personalizzata */
 ::-webkit-scrollbar {
   width: 5px;
