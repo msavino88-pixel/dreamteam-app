@@ -53,6 +53,7 @@ export function ProjectForm({ open, onOpenChange, onSave }: ProjectFormProps) {
     ...templates.map(t => ({ value: t.id, label: t.name })),
   ];
 
+  // Only react to template selection changes — NOT to templates array ref
   useEffect(() => {
     if (!selectedTemplate) {
       setTaskPreview([]);
@@ -69,7 +70,8 @@ export function ProjectForm({ open, onOpenChange, onSave }: ProjectFormProps) {
       }));
       setTaskPreview(tpl.default_tasks || []);
     }
-  }, [selectedTemplate, templates]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTemplate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

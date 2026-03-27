@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { ProjectCard } from '@/components/projects/ProjectCard';
 import { ProjectForm } from '@/components/projects/ProjectForm';
@@ -192,25 +192,29 @@ export default function Projects() {
         </div>
       </div>
 
-      <ProjectForm
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        onSave={handleCreateProject}
-      />
+      {formOpen && (
+        <ProjectForm
+          open={formOpen}
+          onOpenChange={setFormOpen}
+          onSave={handleCreateProject}
+        />
+      )}
 
-      <TemplateFormModal
-        open={templateFormOpen}
-        onOpenChange={setTemplateFormOpen}
-        template={editingTemplate}
-        onSave={(data) => {
-          if (editingTemplate) {
-            updateTemplate.mutate({ id: editingTemplate.id, ...data });
-          } else {
-            createTemplate.mutate({ ...data, created_by: profile?.id });
-          }
-          setTemplateFormOpen(false);
-        }}
-      />
+      {templateFormOpen && (
+        <TemplateFormModal
+          open={templateFormOpen}
+          onOpenChange={setTemplateFormOpen}
+          template={editingTemplate}
+          onSave={(data) => {
+            if (editingTemplate) {
+              updateTemplate.mutate({ id: editingTemplate.id, ...data });
+            } else {
+              createTemplate.mutate({ ...data, created_by: profile?.id });
+            }
+            setTemplateFormOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -232,8 +236,8 @@ function TemplateFormModal({ open, onOpenChange, template, onSave }: TemplateFor
   const [newTask, setNewTask] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState('medium');
 
-  // Reset form when template changes
-  useState(() => {
+  // Sync form when template prop changes or modal opens
+  useEffect(() => {
     if (template) {
       setName(template.name);
       setDescription(template.description || '');
@@ -247,26 +251,7 @@ function TemplateFormModal({ open, onOpenChange, template, onSave }: TemplateFor
       setBudget('');
       setTaskList([]);
     }
-  });
-
-  // Sync when opening with different template
-  const [lastTemplateId, setLastTemplateId] = useState<string | null>(null);
-  if (open && (template?.id || null) !== lastTemplateId) {
-    setLastTemplateId(template?.id || null);
-    if (template) {
-      setName(template.name);
-      setDescription(template.description || '');
-      setPriority(template.priority);
-      setBudget(template.budget ? String(template.budget) : '');
-      setTaskList(template.default_tasks || []);
-    } else {
-      setName('');
-      setDescription('');
-      setPriority('medium');
-      setBudget('');
-      setTaskList([]);
-    }
-  }
+  }, [template, open]);
 
   const addTask = () => {
     if (!newTask.trim()) return;
