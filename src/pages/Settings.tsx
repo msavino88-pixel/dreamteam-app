@@ -164,7 +164,7 @@ export default function Settings() {
               </div>
               <button
                 onClick={toggleTheme}
-                className={`relative w-14 h-7 rounded-full transition-colors ${theme === 'dark' ? 'bg-accent' : 'bg-muted'}`}
+                className={`relative w-14 h-7 rounded-full transition-colors ${theme === 'dark' ? 'bg-foreground/30' : 'bg-muted'}`}
               >
                 <div className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-md transition-transform ${theme === 'dark' ? 'translate-x-7' : 'translate-x-0.5'}`} />
               </button>
@@ -257,7 +257,7 @@ export default function Settings() {
                         style={{
                           background: u.department && departmentColors[u.department]
                             ? `linear-gradient(135deg, ${departmentColors[u.department]}, ${departmentColors[u.department]}cc)`
-                            : 'linear-gradient(135deg, #9B8EBD, #7B9BBF)'
+                            : 'linear-gradient(135deg, #9CA3AF, #6B7280)'
                         }}
                       >
                         {u.full_name.split(' ').map(n => n[0]).join('')}
@@ -268,7 +268,7 @@ export default function Settings() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="text-sm font-medium truncate">{u.full_name}</p>
                           {isMe && (
-                            <span className="text-[10px] bg-accent/10 text-accent px-1.5 py-0.5 rounded-full font-medium">Tu</span>
+                            <span className="text-[10px] bg-foreground/10 text-foreground px-1.5 py-0.5 rounded-full font-medium">Tu</span>
                           )}
                           {!u.is_active && (
                             <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded-full font-medium">Disattivato</span>
@@ -422,7 +422,7 @@ export default function Settings() {
                   style={{
                     background: editDept && departmentColors[editDept]
                       ? `linear-gradient(135deg, ${departmentColors[editDept]}, ${departmentColors[editDept]}cc)`
-                      : 'linear-gradient(135deg, #9B8EBD, #7B9BBF)'
+                      : 'linear-gradient(135deg, #9CA3AF, #6B7280)'
                   }}
                 >
                   {editName.split(' ').map(n => n[0]).join('') || '?'}

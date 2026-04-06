@@ -5,7 +5,7 @@ import { Activity } from 'lucide-react';
 
 const avatarColors = [
   'from-[#D5C8B8] to-[#BCC8B8]',
-  'from-[#9B8EBD] to-[#7B9BBF]',
+  'from-gray-400 to-gray-500',
   'from-[#D05A5A] to-[#D5C8B8]',
   'from-[#7A8B5E] to-[#BCC8B8]',
 ];

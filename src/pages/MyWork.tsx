@@ -9,7 +9,7 @@ import { CheckCircle2, Calendar, ArrowRight, FolderKanban } from 'lucide-react';
 
 const priorityColors: Record<string, string> = {
   low: 'bg-muted-foreground/20',
-  medium: 'bg-[#7B9BBF]',
+  medium: 'bg-gray-400',
   high: 'bg-[#D5C8B8]',
   urgent: 'bg-[#D05A5A]',
 };
@@ -76,7 +76,7 @@ export default function MyWork() {
                         <span className="font-medium">{Math.round(progress)}%</span>
                       </div>
                       <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <div className="h-full rounded-full transition-all bg-accent" style={{ width: `${progress}%` }} />
+                        <div className="h-full rounded-full transition-all bg-foreground/60" style={{ width: `${progress}%` }} />
                       </div>
                     </div>
                   </div>

@@ -92,12 +92,12 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
               <item.icon className={cn("shrink-0", collapsed ? "h-5 w-5" : "h-[18px] w-[18px]")} />
               {!collapsed && <span className="flex-1">{item.name}</span>}
               {!collapsed && item.href === '/messages' && unreadMessages > 0 && (
-                <span className="bg-accent text-accent-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                <span className="bg-foreground text-background text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
                   {unreadMessages}
                 </span>
               )}
               {collapsed && item.href === '/messages' && unreadMessages > 0 && (
-                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-accent" />
+                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-foreground" />
               )}
             </Link>
           );
@@ -123,7 +123,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
       <div className={cn("border-t border-border/50 py-4 shrink-0", collapsed ? "px-2" : "px-4")}>
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-purple)] to-primary text-sm font-semibold text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-gray-400 to-gray-500 text-sm font-semibold text-white">
               {initials}
             </div>
             <button type="button" onClick={handleLogout} className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="Esci">
@@ -132,7 +132,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
           </div>
         ) : (
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-purple)] to-primary text-sm font-semibold text-white shrink-0">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-gray-400 to-gray-500 text-sm font-semibold text-white shrink-0">
               {initials}
             </div>
             <div className="flex-1 min-w-0">
@@ -208,7 +208,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
 
         <div className="border-t border-border/50 py-4 px-4 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-purple)] to-primary text-sm font-semibold text-white shrink-0">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-gray-400 to-gray-500 text-sm font-semibold text-white shrink-0">
               {initials}
             </div>
             <div className="flex-1 min-w-0">

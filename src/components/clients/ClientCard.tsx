@@ -17,7 +17,7 @@ interface ClientCardProps {
 const statusDotColors: Record<string, string> = {
   active: 'bg-emerald-400',
   inactive: 'bg-gray-400',
-  lead: 'bg-[#7B9BBF]',
+  lead: 'bg-gray-400',
   churned: 'bg-[#D05A5A]',
 };
 
@@ -105,7 +105,7 @@ export function ClientCard({ client, spending = [], interactions = [], users = [
 
       {assignee && (
         <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-          <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] flex items-center justify-center text-[8px] font-bold text-white">
+          <div className="h-5 w-5 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-[8px] font-bold text-white">
             {assignee.full_name.split(' ').map(n => n[0]).join('')}
           </div>
           {assignee.full_name}

@@ -79,17 +79,11 @@ export default function Team() {
         role: editRole,
         department: editDept || null,
       });
-      // If admin set a new password
-      if (editPassword.trim() && supabase) {
-        const { error: pwError } = await supabase.auth.admin.updateUserById(editingUser.id, {
-          password: editPassword.trim(),
-        });
-        if (pwError) {
-          // Fallback: try via edge function or direct API if admin API not available
-          setEditMsg(`Profilo salvato! Nota: cambio password richiede Supabase Service Role.`);
-          setTimeout(() => { setEditingUser(null); setEditMsg(''); }, 2000);
-          return;
-        }
+      // Password change not supported from client-side (needs service role)
+      if (editPassword.trim()) {
+        setEditMsg('Profilo salvato! Nota: il cambio password non è disponibile dal pannello admin.');
+        setTimeout(() => { setEditingUser(null); setEditMsg(''); }, 2500);
+        return;
       }
       setEditMsg('Salvato!');
       setTimeout(() => { setEditingUser(null); setEditMsg(''); }, 800);
@@ -99,14 +93,10 @@ export default function Team() {
   };
 
   const handleDeleteUser = async (userId: string) => {
-    if (!supabase) return;
     try {
-      // First deactivate in our DB
       await deactivateUser.mutateAsync(userId);
-      // Try to delete from auth (requires admin privileges)
-      await supabase.auth.admin.deleteUser(userId);
-    } catch {
-      // If auth admin fails, at least user is deactivated in our DB
+    } catch (err) {
+      console.error('Deactivate error:', err);
     }
   };
 
@@ -237,7 +227,7 @@ export default function Team() {
                     style={{
                       background: deptColor
                         ? `linear-gradient(135deg, ${deptColor}, ${deptColor}cc)`
-                        : 'linear-gradient(135deg, #9B8EBD, #7B9BBF)'
+                        : 'linear-gradient(135deg, #9CA3AF, #6B7280)'
                     }}
                   >
                     {user.full_name.split(' ').map(n => n[0]).join('')}
@@ -246,7 +236,7 @@ export default function Team() {
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold truncate">{user.full_name}</h3>
                       {isMe && (
-                        <span className="text-[10px] bg-accent/10 text-accent px-1.5 py-0.5 rounded-full font-medium">Tu</span>
+                        <span className="text-[10px] bg-foreground/10 text-foreground px-1.5 py-0.5 rounded-full font-medium">Tu</span>
                       )}
                     </div>
                     <div className="flex items-center gap-2 flex-wrap mt-0.5">
@@ -350,7 +340,7 @@ export default function Team() {
                   style={{
                     background: editingUser.department && departmentColors[editingUser.department]
                       ? `linear-gradient(135deg, ${departmentColors[editingUser.department]}, ${departmentColors[editingUser.department]}cc)`
-                      : 'linear-gradient(135deg, #9B8EBD, #7B9BBF)'
+                      : 'linear-gradient(135deg, #9CA3AF, #6B7280)'
                   }}
                 >
                   {editName.split(' ').map(n => n[0]).join('') || '?'}
@@ -411,13 +401,13 @@ export default function Team() {
                   variant="outline"
                   className="w-full text-destructive border-destructive/30 hover:bg-destructive/10 mt-2 gap-2"
                   onClick={() => {
-                    if (window.confirm(`Eliminare definitivamente "${editingUser?.full_name}"? Questa azione è irreversibile.`)) {
+                    if (window.confirm(`Disattivare "${editingUser?.full_name}"? L'account non potrà più accedere.`)) {
                       handleDeleteUser(editingUser!.id);
                       setEditingUser(null);
                     }
                   }}
                 >
-                  <Trash2 className="h-4 w-4" /> Elimina Account
+                  <Trash2 className="h-4 w-4" /> Disattiva Account
                 </Button>
               )}
             </div>

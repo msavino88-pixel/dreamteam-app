@@ -109,8 +109,8 @@ export default function ClientDetail() {
         {/* Header Cliente */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-accent/10">
-              <Building2 className="h-8 w-8 text-accent" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-muted">
+              <Building2 className="h-8 w-8 text-muted-foreground" />
             </div>
             <div>
               <div className="flex items-center gap-2">

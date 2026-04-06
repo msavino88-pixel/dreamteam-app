@@ -7,6 +7,7 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
+  useDroppable,
   type DragStartEvent,
   type DragEndEvent,
 } from '@dnd-kit/core';
@@ -34,7 +35,7 @@ const columns: { status: Task['status']; label: string }[] = [
 
 const priorityDotColors: Record<string, string> = {
   low: 'bg-muted-foreground/30',
-  medium: 'bg-[#7B9BBF]',
+  medium: 'bg-gray-400',
   high: 'bg-[#D5C8B8]',
   urgent: 'bg-[#D05A5A]',
 };
@@ -108,7 +109,7 @@ function SortableTaskCard({ task, onClick, subtaskCount, subtaskDone }: {
                 </span>
               )}
               {assignee && (
-                <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] flex items-center justify-center text-[8px] font-bold text-white" title={assignee.full_name}>
+                <div className="h-5 w-5 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-[8px] font-bold text-white" title={assignee.full_name}>
                   {assignee.full_name.split(' ').map(n => n[0]).join('')}
                 </div>
               )}
@@ -116,6 +117,18 @@ function SortableTaskCard({ task, onClick, subtaskCount, subtaskDone }: {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function DroppableColumn({ id, children }: { id: string; children: React.ReactNode }) {
+  const { setNodeRef, isOver } = useDroppable({ id });
+  return (
+    <div
+      ref={setNodeRef}
+      className={`min-w-[260px] md:min-w-0 md:flex-1 snap-start rounded-xl bg-muted/50 p-3 transition-colors ${isOver ? 'bg-muted/80 ring-2 ring-foreground/10' : ''}`}
+    >
+      {children}
     </div>
   );
 }
@@ -183,13 +196,12 @@ export function TaskBoard({ tasks, onStatusChange, onUpdateTask }: TaskBoardProp
               .sort((a, b) => a.position - b.position);
 
             return (
-              <SortableContext
-                key={col.status}
-                id={col.status}
-                items={columnTasks.map(t => t.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div className="min-w-[260px] md:min-w-0 md:flex-1 snap-start rounded-xl bg-muted/50 p-3">
+              <DroppableColumn key={col.status} id={col.status}>
+                <SortableContext
+                  id={col.status}
+                  items={columnTasks.map(t => t.id)}
+                  strategy={verticalListSortingStrategy}
+                >
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-semibold text-card-foreground/80">{col.label}</h3>
                     <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
@@ -211,8 +223,8 @@ export function TaskBoard({ tasks, onStatusChange, onUpdateTask }: TaskBoardProp
                       );
                     })}
                   </div>
-                </div>
-              </SortableContext>
+                </SortableContext>
+              </DroppableColumn>
             );
           })}
         </div>

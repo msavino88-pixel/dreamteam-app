@@ -87,7 +87,7 @@ export default function Messages() {
           </Button>
           <div className="rounded-[28px] bg-card shadow-soft p-6 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] flex items-center justify-center text-sm font-bold text-white">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-sm font-bold text-white">
                 {getUserInitials(otherUser)}
               </div>
               <div>
@@ -151,9 +151,9 @@ export default function Messages() {
               <div
                 key={msg.id}
                 onClick={() => openMessage(msg)}
-                className={`rounded-2xl bg-card shadow-soft p-4 cursor-pointer hover:shadow-float transition-all flex items-center gap-3 ${isUnread ? 'border-l-4 border-accent' : ''}`}
+                className={`rounded-2xl bg-card shadow-soft p-4 cursor-pointer hover:shadow-float transition-all flex items-center gap-3 ${isUnread ? 'border-l-4 border-foreground' : ''}`}
               >
-                <div className="h-9 w-9 rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] flex items-center justify-center text-[10px] font-bold text-white shrink-0">
+                <div className="h-9 w-9 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
                   {getUserInitials(otherUser)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -161,14 +161,14 @@ export default function Messages() {
                     <p className={`text-sm truncate ${isUnread ? 'font-semibold' : 'text-muted-foreground'}`}>
                       {getUserName(otherUser)}
                     </p>
-                    {isUnread && <div className="h-2 w-2 rounded-full bg-accent shrink-0" />}
+                    {isUnread && <div className="h-2 w-2 rounded-full bg-foreground shrink-0" />}
                   </div>
                   {msg.subject && <p className="text-xs font-medium truncate">{msg.subject}</p>}
                   <p className="text-xs text-muted-foreground truncate">{msg.content}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-[10px] text-muted-foreground">{formatRelativeDate(msg.created_at)}</span>
-                  {isUnread ? <Mail className="h-3.5 w-3.5 text-accent" /> : <MailOpen className="h-3.5 w-3.5 text-muted-foreground/40" />}
+                  {isUnread ? <Mail className="h-3.5 w-3.5 text-foreground" /> : <MailOpen className="h-3.5 w-3.5 text-muted-foreground/40" />}
                   <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/30" />
                 </div>
               </div>

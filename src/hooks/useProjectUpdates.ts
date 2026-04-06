@@ -12,7 +12,11 @@ export function useProjectUpdates(projectId?: string) {
         .select('*')
         .eq('project_id', projectId)
         .order('created_at', { ascending: false });
-      if (error) throw error;
+      if (error) {
+        // Table may not exist yet (migration not run)
+        console.warn('project_updates query error:', error.message);
+        return [];
+      }
       return (data ?? []) as ProjectUpdate[];
     },
     enabled: !!projectId,

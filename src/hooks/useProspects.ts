@@ -11,7 +11,10 @@ export function useProspects() {
         .from('prospects')
         .select('*')
         .order('created_at', { ascending: false });
-      if (error) throw error;
+      if (error) {
+        console.warn('prospects query error:', error.message);
+        return [];
+      }
       return (data ?? []) as Prospect[];
     },
   });

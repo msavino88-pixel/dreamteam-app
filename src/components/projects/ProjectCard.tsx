@@ -15,7 +15,7 @@ interface ProjectCardProps {
 
 const priorityDotColors: Record<string, string> = {
   low: 'bg-muted-foreground/30',
-  medium: 'bg-[#7B9BBF]',
+  medium: 'bg-gray-400',
   high: 'bg-[#D5C8B8]',
   urgent: 'bg-[#D05A5A]',
 };
@@ -67,7 +67,7 @@ export function ProjectCard({ project, tasks: allTasks = [], clients: allClients
         </div>
         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
           <div
-            className="h-full rounded-full transition-all duration-300 bg-accent"
+            className="h-full rounded-full transition-all duration-300 bg-foreground/60"
             style={{ width: `${progress}%` }}
           />
         </div>

@@ -22,7 +22,7 @@ const typeColors: Record<string, string> = {
   overdue: 'text-destructive',
   deadline: 'text-amber-500',
   warning: 'text-amber-500',
-  info: 'text-[#7B9BBF]',
+  info: 'text-gray-400',
 };
 
 export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
@@ -122,7 +122,7 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
                   <h3 className="text-sm font-semibold">Notifiche</h3>
                   <div className="flex items-center gap-2">
                     {unreadCount > 0 && (
-                      <button type="button" onClick={markAllRead} className="text-xs text-accent hover:underline flex items-center gap-1">
+                      <button type="button" onClick={markAllRead} className="text-xs text-foreground hover:underline flex items-center gap-1">
                         <CheckCheck className="h-3 w-3" /> Segna lette
                       </button>
                     )}
@@ -143,7 +143,7 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
                       return (
                         <div
                           key={n.id}
-                          className={`flex items-start gap-3 px-5 py-3.5 active:bg-muted/80 cursor-pointer transition-colors border-b border-border/30 last:border-0 ${!n.read ? 'bg-accent/5' : ''}`}
+                          className={`flex items-start gap-3 px-5 py-3.5 active:bg-muted/80 cursor-pointer transition-colors border-b border-border/30 last:border-0 ${!n.read ? 'bg-foreground/5' : ''}`}
                           onClick={() => handleNotifClick(n)}
                         >
                           <Icon className={`h-4 w-4 mt-0.5 shrink-0 ${typeColors[n.type]}`} />
@@ -151,7 +151,7 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
                             <p className={`text-sm ${!n.read ? 'font-medium' : 'text-muted-foreground'}`}>{n.title}</p>
                             <p className="text-xs text-muted-foreground truncate">{n.message}</p>
                           </div>
-                          {!n.read && <div className="h-2 w-2 rounded-full bg-accent mt-1.5 shrink-0" />}
+                          {!n.read && <div className="h-2 w-2 rounded-full bg-foreground mt-1.5 shrink-0" />}
                         </div>
                       );
                     })

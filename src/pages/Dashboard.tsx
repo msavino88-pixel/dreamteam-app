@@ -117,8 +117,8 @@ export default function Dashboard() {
         {/* AI Insights */}
         <div className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-4 md:p-6">
           <div className="flex items-center gap-2 mb-3">
-            <div className="rounded-xl bg-accent/10 p-2">
-              <Sparkles className="h-4 w-4 text-accent" />
+            <div className="rounded-xl bg-foreground/60/10 p-2">
+              <Sparkles className="h-4 w-4 text-foreground" />
             </div>
             <h3 className="text-base font-semibold">AI Insights</h3>
           </div>
@@ -181,7 +181,7 @@ export default function Dashboard() {
                         </div>
                         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                           <div
-                            className="h-full rounded-full transition-all duration-300 bg-accent"
+                            className="h-full rounded-full transition-all duration-300 bg-foreground/60"
                             style={{ width: `${progress}%` }}
                           />
                         </div>

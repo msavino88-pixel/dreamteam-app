@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   DndContext, DragOverlay, closestCorners,
   PointerSensor, TouchSensor, useSensor, useSensors,
+  useDroppable,
   type DragStartEvent, type DragEndEvent,
 } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
@@ -45,10 +46,23 @@ const priorityOptions = [
 
 const priorityDotColors: Record<string, string> = {
   low: 'bg-muted-foreground/30',
-  medium: 'bg-[#7B9BBF]',
+  medium: 'bg-gray-400',
   high: 'bg-[#D5C8B8]',
   urgent: 'bg-[#D05A5A]',
 };
+
+// ── Droppable Column Wrapper ──
+function DroppableColumn({ id, children }: { id: string; children: React.ReactNode }) {
+  const { setNodeRef, isOver } = useDroppable({ id });
+  return (
+    <div
+      ref={setNodeRef}
+      className={`min-w-[260px] md:min-w-0 md:flex-1 snap-start rounded-xl bg-muted/50 p-3 transition-colors ${isOver ? 'bg-muted/80 ring-2 ring-foreground/10' : ''}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 // ── Draggable Project Card ──
 function DraggableProjectCard({ project, tasks, clients, onNavigate }: {
@@ -98,7 +112,7 @@ function DraggableProjectCard({ project, tasks, clients, onNavigate }: {
           {projectTasks.length > 0 && (
             <div className="space-y-1">
               <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
-                <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${progress}%` }} />
+                <div className="h-full rounded-full bg-foreground/60 transition-all" style={{ width: `${progress}%` }} />
               </div>
               <p className="text-[10px] text-muted-foreground">{completed}/{projectTasks.length} task</p>
             </div>
@@ -304,13 +318,12 @@ export default function Projects() {
                 {statusColumns.map(col => {
                   const columnProjects = boardProjects.filter(p => p.status === col.status);
                   return (
-                    <SortableContext
-                      key={col.status}
-                      id={col.status}
-                      items={columnProjects.map(p => p.id)}
-                      strategy={verticalListSortingStrategy}
-                    >
-                      <div className="min-w-[260px] md:min-w-0 md:flex-1 snap-start rounded-xl bg-muted/50 p-3">
+                    <DroppableColumn key={col.status} id={col.status}>
+                      <SortableContext
+                        id={col.status}
+                        items={columnProjects.map(p => p.id)}
+                        strategy={verticalListSortingStrategy}
+                      >
                         <div className="flex items-center justify-between mb-3">
                           <h3 className="text-sm font-semibold text-card-foreground/80">{col.label}</h3>
                           <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
@@ -328,8 +341,8 @@ export default function Projects() {
                             />
                           ))}
                         </div>
-                      </div>
-                    </SortableContext>
+                      </SortableContext>
+                    </DroppableColumn>
                   );
                 })}
               </div>
@@ -397,7 +410,7 @@ export default function Projects() {
                         <span className="font-medium text-muted-foreground">{completed}/{projectTasks.length} task</span>
                       </div>
                       <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <div className="h-full rounded-full transition-all bg-accent" style={{ width: `${progress}%` }} />
+                        <div className="h-full rounded-full transition-all bg-foreground/60" style={{ width: `${progress}%` }} />
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">

@@ -12,7 +12,10 @@ export function useMessages(userId?: string) {
         .select('*')
         .or(`to_user_id.eq.${userId},from_user_id.eq.${userId}`)
         .order('created_at', { ascending: false });
-      if (error) throw error;
+      if (error) {
+        console.warn('messages query error:', error.message);
+        return [];
+      }
       return (data ?? []) as Message[];
     },
     enabled: !!userId,

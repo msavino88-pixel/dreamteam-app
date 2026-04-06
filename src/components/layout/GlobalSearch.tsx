@@ -31,8 +31,8 @@ const typeLabels = {
 
 const typeColors = {
   client: 'text-[#D5C8B8]',
-  project: 'text-[#9B8EBD]',
-  task: 'text-[#7B9BBF]',
+  project: 'text-gray-500',
+  task: 'text-gray-400',
   idea: 'text-[#D05A5A]',
 };
 

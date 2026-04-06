@@ -17,7 +17,7 @@ export default function Login() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#111111]">
-        <div className="h-8 w-8 border-2 border-white/20 border-t-[var(--accent-lime)] rounded-full animate-spin" />
+        <div className="h-8 w-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
       </div>
     );
   }
@@ -87,7 +87,7 @@ export default function Login() {
                   value={fullName}
                   onChange={e => setFullName(e.target.value)}
                   required
-                  className="bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/20 rounded-2xl focus:border-[var(--accent-lime)] focus:ring-[var(--accent-lime)]/30"
+                  className="bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/20 rounded-2xl focus:border-white/30 focus:ring-white/20"
                 />
               </div>
             )}
@@ -100,7 +100,7 @@ export default function Login() {
                 onChange={e => setEmail(e.target.value)}
                 required
                 autoFocus
-                className="bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/20 rounded-2xl focus:border-[var(--accent-lime)] focus:ring-[var(--accent-lime)]/30"
+                className="bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/20 rounded-2xl focus:border-white/30 focus:ring-white/20"
               />
             </div>
             <div>
@@ -112,13 +112,13 @@ export default function Login() {
                 onChange={e => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/20 rounded-2xl focus:border-[var(--accent-lime)] focus:ring-[var(--accent-lime)]/30"
+                className="bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/20 rounded-2xl focus:border-white/30 focus:ring-white/20"
               />
             </div>
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-2xl bg-[var(--accent-lime)] text-[#111111] hover:brightness-110 hover:shadow-glow font-semibold h-12 text-base mt-2 disabled:opacity-50"
+              className="w-full rounded-2xl bg-white text-[#111111] hover:bg-white/90 hover:shadow-glow font-semibold h-12 text-base mt-2 disabled:opacity-50"
             >
               {submitting ? 'Attendere...' : isSignUp ? 'Crea Account' : 'Accedi'}
             </Button>
@@ -127,7 +127,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => { setIsSignUp(!isSignUp); setError(''); }}
-                className="text-[var(--accent-lime)] hover:text-[var(--accent-lime)]/80 transition-colors font-medium"
+                className="text-white hover:text-white/80 transition-colors font-medium"
               >
                 {isSignUp ? 'Accedi' : 'Registrati'}
               </button>

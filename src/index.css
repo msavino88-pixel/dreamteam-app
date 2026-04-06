@@ -19,13 +19,13 @@
     --secondary-foreground: 228 10% 11%;
     --muted: 228 10% 93%;
     --muted-foreground: 230 5% 57%;  /* #8B8D98 */
-    --accent: 267 52% 61%;          /* #8A63D2 */
+    --accent: 228 10% 15%;           /* scuro - per bottoni e CTA */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 100%;
     --border: 228 10% 90%;
     --input: 228 10% 90%;
-    --ring: 267 52% 61%;
+    --ring: 228 10% 50%;
     --radius: 16px;
 
     --sidebar-bg: #111111;
@@ -39,15 +39,15 @@
     --dt-ai: #7B9BBF;
 
     /* Soft UI accents */
-    --accent-lime: #8A63D2;
+    --accent-lime: #6B7280;
     --accent-yellow: #FFD84D;
-    --accent-purple: #8A63D2;
+    --accent-purple: #6B7280;
     --accent-success: #4CAF50;
 
     /* Shadows */
     --shadow-soft: 0px 8px 24px rgba(0, 0, 0, 0.04);
     --shadow-float: 0px 16px 40px rgba(0, 0, 0, 0.08);
-    --shadow-glow: 0px 2px 8px rgba(138, 99, 210, 0.15);
+    --shadow-glow: 0px 2px 8px rgba(0, 0, 0, 0.06);
   }
 
   .dark {
@@ -63,19 +63,19 @@
     --secondary-foreground: 228 10% 93%;
     --muted: 228 14% 15%;
     --muted-foreground: 230 5% 50%;
-    --accent: 267 52% 61%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 228 10% 85%;
+    --accent-foreground: 228 10% 11%;
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 100%;
     --border: 228 12% 18%;
     --input: 228 12% 18%;
-    --ring: 267 52% 61%;
+    --ring: 228 10% 50%;
 
     --sidebar-bg: #0A0A0C;
 
     --shadow-soft: 0px 8px 24px rgba(0, 0, 0, 0.2);
     --shadow-float: 0px 16px 40px rgba(0, 0, 0, 0.3);
-    --shadow-glow: 0px 2px 8px rgba(138, 99, 210, 0.12);
+    --shadow-glow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   * {

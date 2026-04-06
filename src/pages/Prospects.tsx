@@ -180,7 +180,7 @@ export default function Prospects() {
                   <div className="flex items-center gap-2">
                     {assignee && (
                       <span className="flex items-center gap-1">
-                        <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] flex items-center justify-center text-[7px] font-bold text-white">
+                        <div className="h-5 w-5 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-[7px] font-bold text-white">
                           {assignee.full_name.split(' ').map(n => n[0]).join('')}
                         </div>
                         {assignee.full_name}

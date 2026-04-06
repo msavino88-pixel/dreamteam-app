@@ -121,7 +121,7 @@ export function TaskDetailModal({ task, open, onOpenChange, onUpdate }: TaskDeta
             </div>
           ) : (
             <div className="cursor-pointer group" onClick={startEdit}>
-              <h2 className="text-lg font-semibold group-hover:text-accent transition-colors">{task.title}</h2>
+              <h2 className="text-lg font-semibold group-hover:text-foreground transition-colors">{task.title}</h2>
               {task.description ? (
                 <p className="text-sm text-muted-foreground mt-1">{task.description}</p>
               ) : (
@@ -287,7 +287,7 @@ export function TaskDetailModal({ task, open, onOpenChange, onUpdate }: TaskDeta
                 const author = users.find(u => u.id === c.user_id);
                 return (
                   <div key={c.id} className="flex gap-2.5">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] text-[9px] font-bold text-white">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-gray-400 to-gray-500 text-[9px] font-bold text-white">
                       {author?.full_name?.split(' ').map(n => n[0]).join('') || '?'}
                     </div>
                     <div className="flex-1 min-w-0">

@@ -181,7 +181,7 @@ export default function ProjectDetail() {
               <p className="text-[11px] text-muted-foreground mb-2">Progresso</p>
               <div className="flex items-center gap-2">
                 <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full rounded-full bg-accent" style={{ width: `${progress}%` }} />
+                  <div className="h-full rounded-full bg-foreground/60" style={{ width: `${progress}%` }} />
                 </div>
                 <span className="text-sm font-semibold text-card-foreground/70">{Math.round(progress)}%</span>
               </div>
@@ -200,7 +200,7 @@ export default function ProjectDetail() {
                 href={project.contract_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-accent hover:underline"
+                className="flex items-center gap-2 text-sm text-foreground hover:underline"
               >
                 <Download className="h-4 w-4" /> Scarica contratto
               </a>
@@ -287,7 +287,7 @@ export default function ProjectDetail() {
               const author = users.find(u => u.id === upd.user_id);
               return (
                 <div key={upd.id} className="flex gap-3">
-                  <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] flex items-center justify-center text-[9px] font-bold text-white">
+                  <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-[9px] font-bold text-white">
                     {author?.full_name?.split(' ').map(n => n[0]).join('') || '?'}
                   </div>
                   <div className="flex-1 min-w-0">

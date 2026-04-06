@@ -16,7 +16,7 @@ interface IdeaCardProps {
 }
 
 const ideaStatusColors: Record<string, string> = {
-  new: 'bg-[#7B9BBF]',
+  new: 'bg-gray-400',
   evaluating: 'bg-[#D5C8B8]',
   approved: 'bg-[#7A8B5E]',
   rejected: 'bg-[#D05A5A]',
@@ -85,7 +85,7 @@ export function IdeaCard({ idea, onVote, onEdit, onStatusChange, onDelete, onCon
 
       <div className="flex items-center justify-between text-[11px] text-muted-foreground border-t border-border pt-3">
         <div className="flex items-center gap-1.5">
-          <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#9B8EBD] to-[#7B9BBF] flex items-center justify-center text-[8px] font-bold text-white">
+          <div className="h-5 w-5 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-[8px] font-bold text-white">
             {author?.full_name.split(' ').map(n => n[0]).join('') || '?'}
           </div>
           {author?.full_name}

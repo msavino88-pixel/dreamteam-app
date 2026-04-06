@@ -78,7 +78,7 @@ export const statusColors: Record<string, string> = {
   archived: 'bg-gray-100 text-gray-800',
   todo: 'bg-gray-100 text-gray-800',
   in_progress: 'bg-blue-100 text-blue-800',
-  review: 'bg-purple-100 text-purple-800',
+  review: 'bg-gray-100 text-gray-700',
   done: 'bg-green-100 text-green-800',
   new: 'bg-blue-100 text-blue-800',
   evaluating: 'bg-yellow-100 text-yellow-800',
@@ -136,7 +136,7 @@ export const prospectStatusLabels: Record<string, string> = {
 export const prospectStatusColors: Record<string, string> = {
   new: 'bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-400',
   contacted: 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400',
-  negotiating: 'bg-purple-100 text-purple-800 dark:bg-purple-500/15 dark:text-purple-400',
+  negotiating: 'bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400',
   converted: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-400',
   lost: 'bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-400',
 };
