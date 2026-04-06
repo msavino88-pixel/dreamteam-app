@@ -8,6 +8,7 @@ import { useUsers } from '@/hooks/useUsers';
 import { useClients } from '@/hooks/useClients';
 import { useProjects } from '@/hooks/useProjects';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const statusFilterOptions = [
   { value: '', label: 'Tutti gli stati' },
@@ -36,6 +37,7 @@ export default function Ideas() {
   const updateIdea = useUpdateIdea();
   const deleteIdea = useDeleteIdea();
   const { profile } = useAuth();
+  const navigate = useNavigate();
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   let filteredIdeas = ideas.filter(i => !statusFilter || i.status === statusFilter);
@@ -87,6 +89,10 @@ export default function Ideas() {
                 if (window.confirm(`Eliminare l'idea "${i.title}"? Questa azione è irreversibile.`)) {
                   deleteIdea.mutate(i.id);
                 }
+              }}
+              onConvertToProject={(i) => {
+                updateIdea.mutate({ id: i.id, status: 'implemented' as any });
+                navigate(`/projects/new?name=${encodeURIComponent(i.title)}&description=${encodeURIComponent(i.description || '')}`);
               }}
               users={users}
               clients={clients}

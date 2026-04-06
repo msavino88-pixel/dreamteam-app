@@ -76,7 +76,7 @@ export default function MyWork() {
                         <span className="font-medium">{Math.round(progress)}%</span>
                       </div>
                       <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <div className="h-full rounded-full transition-all bg-primary" style={{ width: `${progress}%` }} />
+                        <div className="h-full rounded-full transition-all bg-accent" style={{ width: `${progress}%` }} />
                       </div>
                     </div>
                   </div>

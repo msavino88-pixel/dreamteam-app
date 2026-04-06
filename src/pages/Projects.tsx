@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
+import {
+  DndContext, DragOverlay, closestCorners,
+  PointerSensor, TouchSensor, useSensor, useSensors,
+  type DragStartEvent, type DragEndEvent,
+} from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { Header } from '@/components/layout/Header';
-import { ProjectCard } from '@/components/projects/ProjectCard';
 import { ProjectForm } from '@/components/projects/ProjectForm';
 import { Select } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
@@ -15,18 +21,19 @@ import { useClients } from '@/hooks/useClients';
 import { useProjectTemplates, useCreateProjectTemplate, useUpdateProjectTemplate, useDeleteProjectTemplate } from '@/hooks/useProjectTemplates';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import type { Project, ProjectTemplate } from '@/types';
+import { statusLabels, priorityLabels, formatCurrency, formatDate } from '@/lib/formatting';
+import type { Project, ProjectTemplate, ProjectStatus } from '@/types';
 import {
-  FileStack, Plus, Pencil, Trash2, Save, X, CheckCircle2
+  FileStack, Plus, Pencil, Trash2, Save, X, CheckCircle2,
+  FolderKanban, Calendar, MoreVertical, Archive, GripVertical
 } from 'lucide-react';
+import { DropdownMenu, DropdownItem } from '@/components/ui/dropdown-menu';
 
-const statusFilterOptions = [
-  { value: '', label: 'Tutti gli stati' },
-  { value: 'planning', label: 'Pianificazione' },
-  { value: 'active', label: 'Attivo' },
-  { value: 'paused', label: 'In pausa' },
-  { value: 'completed', label: 'Completato' },
-  { value: 'archived', label: 'Archiviato' },
+const statusColumns: { status: ProjectStatus; label: string }[] = [
+  { status: 'planning', label: 'Pianificazione' },
+  { status: 'active', label: 'Attivo' },
+  { status: 'paused', label: 'In Pausa' },
+  { status: 'completed', label: 'Completato' },
 ];
 
 const priorityOptions = [
@@ -36,9 +43,75 @@ const priorityOptions = [
   { value: 'urgent', label: 'Urgente' },
 ];
 
+const priorityDotColors: Record<string, string> = {
+  low: 'bg-muted-foreground/30',
+  medium: 'bg-[#7B9BBF]',
+  high: 'bg-[#D5C8B8]',
+  urgent: 'bg-[#D05A5A]',
+};
+
+// ── Draggable Project Card ──
+function DraggableProjectCard({ project, tasks, clients, onNavigate }: {
+  project: Project;
+  tasks: { project_id: string; status: string }[];
+  clients: { id: string; company_name: string }[];
+  onNavigate: () => void;
+}) {
+  const client = clients.find(c => c.id === project.client_id);
+  const projectTasks = tasks.filter(t => t.project_id === project.id);
+  const completed = projectTasks.filter(t => t.status === 'done').length;
+  const progress = projectTasks.length > 0 ? (completed / projectTasks.length) * 100 : 0;
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: project.id,
+    data: { type: 'project', project },
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="rounded-2xl bg-card shadow-soft p-4 cursor-pointer hover:shadow-float transition-all group"
+      onClick={onNavigate}
+    >
+      <div className="flex items-start gap-2">
+        <button
+          className="mt-1 opacity-0 group-hover:opacity-60 hover:!opacity-100 cursor-grab active:cursor-grabbing touch-none shrink-0"
+          {...attributes}
+          {...listeners}
+          onClick={e => e.stopPropagation()}
+        >
+          <GripVertical className="h-3.5 w-3.5 text-muted-foreground" />
+        </button>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between mb-1">
+            <h4 className="text-sm font-semibold truncate">{project.name}</h4>
+            <div className={`h-2 w-2 rounded-full shrink-0 ${priorityDotColors[project.priority]}`} />
+          </div>
+          {client && <p className="text-[11px] text-muted-foreground truncate mb-2">{client.company_name}</p>}
+          {projectTasks.length > 0 && (
+            <div className="space-y-1">
+              <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
+                <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${progress}%` }} />
+              </div>
+              <p className="text-[10px] text-muted-foreground">{completed}/{projectTasks.length} task</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Projects() {
   const [formOpen, setFormOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState('');
+  const [viewMode, setViewMode] = useState<'board' | 'grid'>('board');
   const [showTemplates, setShowTemplates] = useState(false);
   const [templateFormOpen, setTemplateFormOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<ProjectTemplate | null>(null);
@@ -56,9 +129,40 @@ export default function Projects() {
   const deleteTemplate = useDeleteProjectTemplate();
   const { profile } = useAuth();
 
-  const filteredProjects = projects.filter(p =>
-    !statusFilter || p.status === statusFilter
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
   );
+
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const proj = projects.find(p => p.id === event.active.id);
+    if (proj) setActiveProject(proj);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    setActiveProject(null);
+    const { active, over } = event;
+    if (!over) return;
+
+    const projectId = active.id as string;
+    const currentProject = projects.find(p => p.id === projectId);
+    if (!currentProject) return;
+
+    // Check if dropped on a column
+    const overColumn = statusColumns.find(c => c.status === over.id);
+    if (overColumn && overColumn.status !== currentProject.status) {
+      updateProject.mutate({ id: projectId, status: overColumn.status });
+      return;
+    }
+
+    // Check if dropped on another project
+    const overProject = projects.find(p => p.id === over.id);
+    if (overProject && overProject.status !== currentProject.status) {
+      updateProject.mutate({ id: projectId, status: overProject.status });
+    }
+  };
 
   const handleCreateProject = async (project: Partial<Project>, taskTitles?: { title: string; priority: string }[]) => {
     createProject.mutate({ ...project, created_by: profile?.id }, {
@@ -77,6 +181,10 @@ export default function Projects() {
     });
   };
 
+  // Filter out archived for the board view
+  const boardProjects = projects.filter(p => p.status !== 'archived');
+  const archivedCount = projects.filter(p => p.status === 'archived').length;
+
   return (
     <div>
       <Header
@@ -86,12 +194,22 @@ export default function Projects() {
       />
       <div className="p-4 md:p-6 space-y-4">
         <div className="flex flex-wrap gap-3 items-center justify-between">
-          <Select
-            options={statusFilterOptions}
-            value={statusFilter}
-            onChange={e => setStatusFilter(e.target.value)}
-            className="w-48"
-          />
+          <div className="flex gap-2">
+            <Button
+              variant={viewMode === 'board' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('board')}
+            >
+              Board
+            </Button>
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+            >
+              Griglia
+            </Button>
+          </div>
           <Button
             variant="outline"
             size="sm"
@@ -169,27 +287,132 @@ export default function Projects() {
           </Card>
         )}
 
-        <p className="text-sm text-muted-foreground">
-          {filteredProjects.length} progett{filteredProjects.length !== 1 ? 'i' : 'o'}
-        </p>
+        {/* Board View - Kanban per status */}
+        {viewMode === 'board' && (
+          <>
+            <p className="text-sm text-muted-foreground">
+              {boardProjects.length} progett{boardProjects.length !== 1 ? 'i' : 'o'}
+              {archivedCount > 0 && ` · ${archivedCount} archiviati`}
+            </p>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCorners}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <div className="flex gap-3 md:gap-4 overflow-x-auto pb-2 snap-x">
+                {statusColumns.map(col => {
+                  const columnProjects = boardProjects.filter(p => p.status === col.status);
+                  return (
+                    <SortableContext
+                      key={col.status}
+                      id={col.status}
+                      items={columnProjects.map(p => p.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      <div className="min-w-[260px] md:min-w-0 md:flex-1 snap-start rounded-xl bg-muted/50 p-3">
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-sm font-semibold text-card-foreground/80">{col.label}</h3>
+                          <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
+                            {columnProjects.length}
+                          </span>
+                        </div>
+                        <div className="space-y-2 min-h-[60px]">
+                          {columnProjects.map(project => (
+                            <DraggableProjectCard
+                              key={project.id}
+                              project={project}
+                              tasks={tasks}
+                              clients={clients}
+                              onNavigate={() => navigate(`/projects/${project.id}`)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </SortableContext>
+                  );
+                })}
+              </div>
+              <DragOverlay>
+                {activeProject && (
+                  <div className="rounded-xl bg-card border-2 border-accent p-3.5 shadow-2xl opacity-90 w-[260px]">
+                    <p className="text-sm font-medium">{activeProject.name}</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">{statusLabels[activeProject.status]}</p>
+                  </div>
+                )}
+              </DragOverlay>
+            </DndContext>
+          </>
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filteredProjects.map(project => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              tasks={tasks}
-              clients={clients}
-              onEdit={(p) => navigate(`/projects/${p.id}`)}
-              onArchive={(p) => updateProject.mutate({ id: p.id, status: p.status === 'archived' ? 'active' : 'archived' })}
-              onDelete={(p) => {
-                if (window.confirm(`Eliminare il progetto "${p.name}"? Questa azione è irreversibile.`)) {
-                  deleteProject.mutate(p.id);
-                }
-              }}
-            />
-          ))}
-        </div>
+        {/* Grid View */}
+        {viewMode === 'grid' && (
+          <>
+            <p className="text-sm text-muted-foreground">
+              {projects.length} progett{projects.length !== 1 ? 'i' : 'o'}
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {projects.map(project => {
+                const client = clients.find(c => c.id === project.client_id);
+                const projectTasks = tasks.filter(t => t.project_id === project.id);
+                const completed = projectTasks.filter(t => t.status === 'done').length;
+                const progress = projectTasks.length > 0 ? (completed / projectTasks.length) * 100 : 0;
+
+                return (
+                  <div
+                    key={project.id}
+                    className="rounded-[28px] bg-card shadow-soft p-6 cursor-pointer hover:shadow-float transition-all hover:scale-[1.01]"
+                    onClick={() => navigate(`/projects/${project.id}`)}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-xl bg-muted p-2.5">
+                          <FolderKanban className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-sm">{project.name}</h3>
+                          {client && <p className="text-xs text-muted-foreground">{client.company_name}</p>}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] text-muted-foreground">{statusLabels[project.status]}</span>
+                        <div className={`h-2 w-2 rounded-full ${priorityDotColors[project.priority]}`} />
+                        <DropdownMenu trigger={<button className="p-1 rounded-lg hover:bg-muted transition-colors" onClick={e => e.stopPropagation()}><MoreVertical className="h-3.5 w-3.5 text-muted-foreground" /></button>}>
+                          <DropdownItem onClick={() => navigate(`/projects/${project.id}`)}><Pencil className="h-3.5 w-3.5" /> Modifica</DropdownItem>
+                          <DropdownItem onClick={() => updateProject.mutate({ id: project.id, status: project.status === 'archived' ? 'active' : 'archived' })}>
+                            <Archive className="h-3.5 w-3.5" /> {project.status === 'archived' ? 'Riattiva' : 'Archivia'}
+                          </DropdownItem>
+                          <DropdownItem variant="danger" onClick={() => {
+                            if (window.confirm(`Eliminare "${project.name}"?`)) deleteProject.mutate(project.id);
+                          }}>
+                            <Trash2 className="h-3.5 w-3.5" /> Elimina
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                    {project.description && <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{project.description}</p>}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-muted-foreground">Progresso</span>
+                        <span className="font-medium text-muted-foreground">{completed}/{projectTasks.length} task</span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                        <div className="h-full rounded-full transition-all bg-accent" style={{ width: `${progress}%` }} />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>{formatDate(project.start_date)} - {formatDate(project.end_date)}</span>
+                      </div>
+                      {project.budget && <span className="font-semibold text-card-foreground/70">{formatCurrency(project.budget)}</span>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
 
       {formOpen && (
@@ -236,7 +459,6 @@ function TemplateFormModal({ open, onOpenChange, template, onSave }: TemplateFor
   const [newTask, setNewTask] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState('medium');
 
-  // Sync form when template prop changes or modal opens
   useEffect(() => {
     if (template) {
       setName(template.name);
@@ -245,23 +467,14 @@ function TemplateFormModal({ open, onOpenChange, template, onSave }: TemplateFor
       setBudget(template.budget ? String(template.budget) : '');
       setTaskList(template.default_tasks || []);
     } else {
-      setName('');
-      setDescription('');
-      setPriority('medium');
-      setBudget('');
-      setTaskList([]);
+      setName(''); setDescription(''); setPriority('medium'); setBudget(''); setTaskList([]);
     }
   }, [template, open]);
 
   const addTask = () => {
     if (!newTask.trim()) return;
     setTaskList(prev => [...prev, { title: newTask.trim(), priority: newTaskPriority }]);
-    setNewTask('');
-    setNewTaskPriority('medium');
-  };
-
-  const removeTask = (idx: number) => {
-    setTaskList(prev => prev.filter((_, i) => i !== idx));
+    setNewTask(''); setNewTaskPriority('medium');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -300,8 +513,6 @@ function TemplateFormModal({ open, onOpenChange, template, onSave }: TemplateFor
               <Input type="number" step="0.01" value={budget} onChange={e => setBudget(e.target.value)} placeholder="0.00" />
             </div>
           </div>
-
-          {/* Task list */}
           <div>
             <label className="text-sm font-medium mb-2 block">Task Predefinite</label>
             {taskList.length > 0 && (
@@ -311,7 +522,7 @@ function TemplateFormModal({ open, onOpenChange, template, onSave }: TemplateFor
                     <span className="text-xs text-muted-foreground w-5 text-center">{i + 1}</span>
                     <span className="flex-1 text-sm">{t.title}</span>
                     <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{t.priority}</span>
-                    <button type="button" onClick={() => removeTask(i)} className="p-1 rounded text-muted-foreground hover:text-destructive transition-colors">
+                    <button type="button" onClick={() => setTaskList(prev => prev.filter((_, j) => j !== i))} className="p-1 rounded text-muted-foreground hover:text-destructive transition-colors">
                       <X className="h-3.5 w-3.5" />
                     </button>
                   </div>
@@ -319,30 +530,18 @@ function TemplateFormModal({ open, onOpenChange, template, onSave }: TemplateFor
               </div>
             )}
             <div className="flex gap-2">
-              <Input
-                value={newTask}
-                onChange={e => setNewTask(e.target.value)}
-                placeholder="Titolo task..."
-                className="flex-1"
-                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addTask(); } }}
-              />
-              <Select
-                options={priorityOptions}
-                value={newTaskPriority}
-                onChange={e => setNewTaskPriority(e.target.value)}
-                className="w-28"
-              />
+              <Input value={newTask} onChange={e => setNewTask(e.target.value)} placeholder="Titolo task..." className="flex-1"
+                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addTask(); } }} />
+              <Select options={priorityOptions} value={newTaskPriority} onChange={e => setNewTaskPriority(e.target.value)} className="w-28" />
               <Button type="button" variant="outline" size="sm" onClick={addTask} className="shrink-0 h-11 px-3">
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
           </div>
-
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Annulla</Button>
             <Button type="submit" disabled={!name.trim()} className="gap-2">
-              <Save className="h-4 w-4" />
-              {template ? 'Salva Modifiche' : 'Crea Modello'}
+              <Save className="h-4 w-4" /> {template ? 'Salva Modifiche' : 'Crea Modello'}
             </Button>
           </div>
         </form>

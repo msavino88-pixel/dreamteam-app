@@ -21,6 +21,10 @@ import {
   Lightbulb,
   ArrowRight,
   CheckCircle2,
+  Sparkles,
+  Target,
+  Clock,
+  TrendingUp,
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -44,6 +48,28 @@ export default function Dashboard() {
   const recentProjects = projects
     .filter(p => p.status === 'active' || p.status === 'planning')
     .slice(0, 3);
+
+  // AI-like insights (generated from data)
+  const completedTasksThisWeek = tasks.filter(t => {
+    if (!t.completed_at) return false;
+    const d = new Date(t.completed_at);
+    const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+    return d >= weekAgo;
+  }).length;
+
+  const totalLoggedHours = tasks.reduce((sum, t) => sum + (t.logged_hours || 0), 0);
+
+  const insights: string[] = [];
+  if (overdueTasks > 0) insights.push(`Hai ${overdueTasks} task scadut${overdueTasks === 1 ? 'a' : 'e'} — prioritizzale per non perdere ritmo.`);
+  if (completedTasksThisWeek > 5) insights.push(`Ottimo ritmo! ${completedTasksThisWeek} task completate questa settimana.`);
+  if (activeProjects > 5) insights.push(`${activeProjects} progetti attivi: valuta di mettere in pausa quelli meno prioritari.`);
+  const projectsEndingSoon = projects.filter(p => {
+    if (p.status !== 'active' || !p.end_date) return false;
+    const days = Math.ceil((new Date(p.end_date).getTime() - Date.now()) / 86400000);
+    return days >= 0 && days <= 7;
+  });
+  if (projectsEndingSoon.length > 0) insights.push(`${projectsEndingSoon.length} progett${projectsEndingSoon.length === 1 ? 'o' : 'i'} in scadenza entro 7 giorni.`);
+  if (insights.length === 0) insights.push('Tutto sotto controllo! Nessuna criticità rilevata.');
 
   return (
     <div>
@@ -88,6 +114,31 @@ export default function Dashboard() {
           </Button>
         </div>
 
+        {/* AI Insights */}
+        <div className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-4 md:p-6">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="rounded-xl bg-accent/10 p-2">
+              <Sparkles className="h-4 w-4 text-accent" />
+            </div>
+            <h3 className="text-base font-semibold">AI Insights</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {insights.map((insight, i) => (
+              <div key={i} className="rounded-xl bg-muted/40 p-3 text-sm text-card-foreground/80">
+                {insight}
+              </div>
+            ))}
+            <div className="rounded-xl bg-muted/40 p-3 flex items-center gap-2 text-sm">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <span><strong>{totalLoggedHours.toFixed(1)}</strong> ore tracciate totali</span>
+            </div>
+            <div className="rounded-xl bg-muted/40 p-3 flex items-center gap-2 text-sm">
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <span><strong>{completedTasksThisWeek}</strong> task completate questa settimana</span>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
           {/* Progetti Recenti */}
           <div className="lg:col-span-2">
@@ -130,7 +181,7 @@ export default function Dashboard() {
                         </div>
                         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                           <div
-                            className="h-full rounded-full transition-all duration-300 bg-primary"
+                            className="h-full rounded-full transition-all duration-300 bg-accent"
                             style={{ width: `${progress}%` }}
                           />
                         </div>

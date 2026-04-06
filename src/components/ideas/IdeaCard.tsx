@@ -1,7 +1,7 @@
 import type { Idea, User, Client, Project } from '@/types';
 import { statusLabels, formatRelativeDate } from '@/lib/formatting';
 import { DropdownMenu, DropdownItem } from '@/components/ui/dropdown-menu';
-import { ThumbsUp, Lightbulb, Link, MoreVertical, Pencil, CheckCircle2, XCircle, Trash2 } from 'lucide-react';
+import { ThumbsUp, Lightbulb, Link, MoreVertical, Pencil, CheckCircle2, XCircle, Trash2, FolderKanban } from 'lucide-react';
 
 interface IdeaCardProps {
   idea: Idea;
@@ -9,6 +9,7 @@ interface IdeaCardProps {
   onEdit?: (idea: Idea) => void;
   onStatusChange?: (idea: Idea, status: string) => void;
   onDelete?: (idea: Idea) => void;
+  onConvertToProject?: (idea: Idea) => void;
   users?: User[];
   clients?: Client[];
   projects?: Project[];
@@ -22,7 +23,7 @@ const ideaStatusColors: Record<string, string> = {
   implemented: 'bg-emerald-400',
 };
 
-export function IdeaCard({ idea, onVote, onEdit, onStatusChange, onDelete, users = [], clients = [], projects = [] }: IdeaCardProps) {
+export function IdeaCard({ idea, onVote, onEdit, onStatusChange, onDelete, onConvertToProject, users = [], clients = [], projects = [] }: IdeaCardProps) {
   const author = users.find(u => u.id === idea.author_id);
   const client = idea.client_id ? clients.find(c => c.id === idea.client_id) : null;
   const project = idea.project_id ? projects.find(p => p.id === idea.project_id) : null;
@@ -50,6 +51,7 @@ export function IdeaCard({ idea, onVote, onEdit, onStatusChange, onDelete, users
           {(onEdit || onStatusChange || onDelete) && (
             <DropdownMenu trigger={<button className="p-1 rounded-lg hover:bg-muted transition-colors"><MoreVertical className="h-3.5 w-3.5 text-muted-foreground" /></button>}>
               {onEdit && <DropdownItem onClick={() => onEdit(idea)}><Pencil className="h-3.5 w-3.5" /> Modifica</DropdownItem>}
+              {onConvertToProject && idea.status !== 'implemented' && <DropdownItem onClick={() => onConvertToProject(idea)}><FolderKanban className="h-3.5 w-3.5" /> Trasforma in Progetto</DropdownItem>}
               {onStatusChange && idea.status !== 'approved' && <DropdownItem onClick={() => onStatusChange(idea, 'approved')}><CheckCircle2 className="h-3.5 w-3.5" /> Approva</DropdownItem>}
               {onStatusChange && idea.status !== 'rejected' && <DropdownItem onClick={() => onStatusChange(idea, 'rejected')}><XCircle className="h-3.5 w-3.5" /> Rifiuta</DropdownItem>}
               {onStatusChange && idea.status !== 'implemented' && <DropdownItem onClick={() => onStatusChange(idea, 'implemented')}><CheckCircle2 className="h-3.5 w-3.5" /> Implementata</DropdownItem>}

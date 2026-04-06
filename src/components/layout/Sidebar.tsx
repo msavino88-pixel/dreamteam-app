@@ -11,17 +11,22 @@ import {
   X,
   ChevronsLeft,
   ChevronsRight,
+  Target,
+  MessageSquare,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCallback } from 'react';
+import { useUnreadCount } from '@/hooks/useMessages';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Il Mio Lavoro', href: '/my-work', icon: ClipboardList },
   { name: 'Clienti', href: '/clients', icon: Users },
   { name: 'Progetti', href: '/projects', icon: FolderKanban },
+  { name: 'Obiettivi', href: '/prospects', icon: Target },
   { name: 'Idee', href: '/ideas', icon: Lightbulb },
+  { name: 'Messaggi', href: '/messages', icon: MessageSquare },
   { name: 'Team', href: '/team', icon: UserCog },
   { name: 'Impostazioni', href: '/settings', icon: Settings },
 ];
@@ -38,6 +43,7 @@ interface SidebarProps {
 export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
   const { profile, signOut } = useAuth();
   const { pathname } = useLocation();
+  const { data: unreadMessages = 0 } = useUnreadCount(profile?.id);
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('') || '?';
 
   const isActive = (href: string) =>
@@ -76,15 +82,23 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
               to={item.href}
               title={collapsed ? item.name : undefined}
               className={cn(
-                'flex items-center rounded-2xl text-sm font-medium transition-colors duration-200 no-underline',
+                'flex items-center rounded-2xl text-sm font-medium transition-colors duration-200 no-underline relative',
                 collapsed ? 'justify-center px-0 py-3' : 'gap-3 px-4 py-3',
                 active
-                  ? 'bg-primary text-primary-foreground shadow-glow'
+                  ? 'bg-white dark:bg-[hsl(228,14%,18%)] text-foreground border border-border/50 shadow-soft'
                   : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               )}
             >
               <item.icon className={cn("shrink-0", collapsed ? "h-5 w-5" : "h-[18px] w-[18px]")} />
-              {!collapsed && <span>{item.name}</span>}
+              {!collapsed && <span className="flex-1">{item.name}</span>}
+              {!collapsed && item.href === '/messages' && unreadMessages > 0 && (
+                <span className="bg-accent text-accent-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                  {unreadMessages}
+                </span>
+              )}
+              {collapsed && item.href === '/messages' && unreadMessages > 0 && (
+                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-accent" />
+              )}
             </Link>
           );
         })}
@@ -181,7 +195,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
                 className={cn(
                   'flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-colors duration-200 no-underline',
                   active
-                    ? 'bg-primary text-primary-foreground shadow-glow'
+                    ? 'bg-white dark:bg-[hsl(228,14%,18%)] text-foreground border border-border/50 shadow-soft'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >

@@ -12,7 +12,7 @@ import { formatRelativeDate, priorityLabels } from '@/lib/formatting';
 import type { Task } from '@/types';
 import {
   CheckCircle2, Circle, Plus, Trash2, Send,
-  Calendar, User, Flag, MessageSquare, ListChecks
+  Calendar, User, Flag, MessageSquare, ListChecks, Clock
 } from 'lucide-react';
 
 interface TaskDetailModalProps {
@@ -121,7 +121,7 @@ export function TaskDetailModal({ task, open, onOpenChange, onUpdate }: TaskDeta
             </div>
           ) : (
             <div className="cursor-pointer group" onClick={startEdit}>
-              <h2 className="text-lg font-semibold group-hover:text-primary transition-colors">{task.title}</h2>
+              <h2 className="text-lg font-semibold group-hover:text-accent transition-colors">{task.title}</h2>
               {task.description ? (
                 <p className="text-sm text-muted-foreground mt-1">{task.description}</p>
               ) : (
@@ -174,6 +174,36 @@ export function TaskDetailModal({ task, open, onOpenChange, onUpdate }: TaskDeta
                 type="date"
                 value={task.due_date?.slice(0, 10) || ''}
                 onChange={e => onUpdate({ id: task.id, due_date: e.target.value || null })}
+              />
+            </div>
+          </div>
+
+          {/* Time tracking */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-medium text-muted-foreground flex items-center gap-1 mb-1">
+                <Clock className="h-3 w-3" /> Ore Stimate
+              </label>
+              <Input
+                type="number"
+                step="0.5"
+                min="0"
+                value={task.estimated_hours ?? ''}
+                onChange={e => onUpdate({ id: task.id, estimated_hours: e.target.value ? parseFloat(e.target.value) : null })}
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-muted-foreground flex items-center gap-1 mb-1">
+                <Clock className="h-3 w-3" /> Ore Lavorate
+              </label>
+              <Input
+                type="number"
+                step="0.5"
+                min="0"
+                value={task.logged_hours ?? ''}
+                onChange={e => onUpdate({ id: task.id, logged_hours: e.target.value ? parseFloat(e.target.value) : null })}
+                placeholder="0"
               />
             </div>
           </div>

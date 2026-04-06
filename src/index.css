@@ -13,7 +13,7 @@
     --card-foreground: 228 10% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 228 10% 11%;
-    --primary: 78 100% 60%;        /* #D4FF33 */
+    --primary: 0 0% 100%;           /* #FFFFFF - bianco pulito */
     --primary-foreground: 228 10% 11%;
     --secondary: 228 10% 95%;
     --secondary-foreground: 228 10% 11%;
@@ -25,7 +25,7 @@
     --destructive-foreground: 0 0% 100%;
     --border: 228 10% 90%;
     --input: 228 10% 90%;
-    --ring: 78 100% 60%;
+    --ring: 267 52% 61%;
     --radius: 16px;
 
     --sidebar-bg: #111111;
@@ -39,7 +39,7 @@
     --dt-ai: #7B9BBF;
 
     /* Soft UI accents */
-    --accent-lime: #D4FF33;
+    --accent-lime: #8A63D2;
     --accent-yellow: #FFD84D;
     --accent-purple: #8A63D2;
     --accent-success: #4CAF50;
@@ -47,7 +47,7 @@
     /* Shadows */
     --shadow-soft: 0px 8px 24px rgba(0, 0, 0, 0.04);
     --shadow-float: 0px 16px 40px rgba(0, 0, 0, 0.08);
-    --shadow-glow: 0px 4px 12px rgba(212, 255, 51, 0.4);
+    --shadow-glow: 0px 2px 8px rgba(138, 99, 210, 0.15);
   }
 
   .dark {
@@ -57,8 +57,8 @@
     --card-foreground: 228 10% 93%;
     --popover: 228 14% 11%;
     --popover-foreground: 228 10% 93%;
-    --primary: 78 100% 60%;
-    --primary-foreground: 228 10% 11%;
+    --primary: 228 14% 18%;          /* dark neutral active */
+    --primary-foreground: 228 10% 93%;
     --secondary: 228 14% 15%;
     --secondary-foreground: 228 10% 93%;
     --muted: 228 14% 15%;
@@ -69,13 +69,13 @@
     --destructive-foreground: 0 0% 100%;
     --border: 228 12% 18%;
     --input: 228 12% 18%;
-    --ring: 78 100% 60%;
+    --ring: 267 52% 61%;
 
     --sidebar-bg: #0A0A0C;
 
     --shadow-soft: 0px 8px 24px rgba(0, 0, 0, 0.2);
     --shadow-float: 0px 16px 40px rgba(0, 0, 0, 0.3);
-    --shadow-glow: 0px 4px 12px rgba(212, 255, 51, 0.2);
+    --shadow-glow: 0px 2px 8px rgba(138, 99, 210, 0.12);
   }
 
   * {

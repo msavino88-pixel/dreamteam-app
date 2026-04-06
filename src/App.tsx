@@ -18,6 +18,8 @@ import Team from '@/pages/Team';
 import Settings from '@/pages/Settings';
 import Login from '@/pages/Login';
 import MyWork from '@/pages/MyWork';
+import Messages from '@/pages/Messages';
+import Prospects from '@/pages/Prospects';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +56,8 @@ function App() {
                   <Route path="/projects/new" element={<ProjectNew />} />
                   <Route path="/projects/:id" element={<ProjectDetail />} />
                   <Route path="/ideas" element={<Ideas />} />
+                  <Route path="/prospects" element={<Prospects />} />
+                  <Route path="/messages" element={<Messages />} />
                   <Route path="/team" element={<Team />} />
                   <Route path="/settings" element={<Settings />} />
                 </Route>

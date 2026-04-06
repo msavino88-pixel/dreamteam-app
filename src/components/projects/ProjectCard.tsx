@@ -67,7 +67,7 @@ export function ProjectCard({ project, tasks: allTasks = [], clients: allClients
         </div>
         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
           <div
-            className="h-full rounded-full transition-all duration-300 bg-primary"
+            className="h-full rounded-full transition-all duration-300 bg-accent"
             style={{ width: `${progress}%` }}
           />
         </div>

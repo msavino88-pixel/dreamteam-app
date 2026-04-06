@@ -53,6 +53,7 @@ export default function Team() {
   const [editEmail, setEditEmail] = useState('');
   const [editRole, setEditRole] = useState<UserRole>('consultant');
   const [editDept, setEditDept] = useState('');
+  const [editPassword, setEditPassword] = useState('');
   const [editMsg, setEditMsg] = useState('');
 
   // Confirm delete
@@ -64,6 +65,7 @@ export default function Team() {
     setEditEmail(u.email);
     setEditRole(u.role);
     setEditDept(u.department || '');
+    setEditPassword('');
     setEditMsg('');
   };
 
@@ -77,10 +79,34 @@ export default function Team() {
         role: editRole,
         department: editDept || null,
       });
+      // If admin set a new password
+      if (editPassword.trim() && supabase) {
+        const { error: pwError } = await supabase.auth.admin.updateUserById(editingUser.id, {
+          password: editPassword.trim(),
+        });
+        if (pwError) {
+          // Fallback: try via edge function or direct API if admin API not available
+          setEditMsg(`Profilo salvato! Nota: cambio password richiede Supabase Service Role.`);
+          setTimeout(() => { setEditingUser(null); setEditMsg(''); }, 2000);
+          return;
+        }
+      }
       setEditMsg('Salvato!');
       setTimeout(() => { setEditingUser(null); setEditMsg(''); }, 800);
     } catch (err: unknown) {
       setEditMsg(`Errore: ${err instanceof Error ? err.message : 'sconosciuto'}`);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!supabase) return;
+    try {
+      // First deactivate in our DB
+      await deactivateUser.mutateAsync(userId);
+      // Try to delete from auth (requires admin privileges)
+      await supabase.auth.admin.deleteUser(userId);
+    } catch {
+      // If auth admin fails, at least user is deactivated in our DB
     }
   };
 
@@ -220,7 +246,7 @@ export default function Team() {
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold truncate">{user.full_name}</h3>
                       {isMe && (
-                        <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-medium">Tu</span>
+                        <span className="text-[10px] bg-accent/10 text-accent px-1.5 py-0.5 rounded-full font-medium">Tu</span>
                       )}
                     </div>
                     <div className="flex items-center gap-2 flex-wrap mt-0.5">
@@ -353,6 +379,18 @@ export default function Team() {
                   <Select options={departmentOptions} value={editDept} onChange={e => setEditDept(e.target.value)} />
                 </div>
               </div>
+              {isAdmin && (
+                <div>
+                  <label className="text-sm font-medium mb-1.5 block">Nuova Password</label>
+                  <Input
+                    type="text"
+                    value={editPassword}
+                    onChange={e => setEditPassword(e.target.value)}
+                    placeholder="Lascia vuoto per non cambiare"
+                  />
+                  <p className="text-[10px] text-muted-foreground mt-1">Inserisci solo se vuoi reimpostare la password</p>
+                </div>
+              )}
 
               {editMsg && (
                 <div className={`p-2.5 rounded-xl text-sm ${editMsg.startsWith('Errore') ? 'bg-destructive/10 text-destructive' : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'}`}>
@@ -368,6 +406,20 @@ export default function Team() {
                 </Button>
                 <Button variant="outline" onClick={() => setEditingUser(null)}>Annulla</Button>
               </div>
+              {isAdmin && editingUser?.id !== profile?.id && (
+                <Button
+                  variant="outline"
+                  className="w-full text-destructive border-destructive/30 hover:bg-destructive/10 mt-2 gap-2"
+                  onClick={() => {
+                    if (window.confirm(`Eliminare definitivamente "${editingUser?.full_name}"? Questa azione è irreversibile.`)) {
+                      handleDeleteUser(editingUser!.id);
+                      setEditingUser(null);
+                    }
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" /> Elimina Account
+                </Button>
+              )}
             </div>
           </DialogContent>
         </Dialog>

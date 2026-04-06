@@ -89,6 +89,7 @@ export interface Project {
   end_date: string | null;
   budget: number | null;
   created_by: string | null;
+  contract_url: string | null;
   created_at: string;
   updated_at: string;
   client?: Client;
@@ -127,6 +128,8 @@ export interface Task {
   priority: Priority;
   position: number;
   due_date: string | null;
+  estimated_hours: number | null;
+  logged_hours: number | null;
   completed_at: string | null;
   created_at: string;
   updated_at: string;
@@ -180,6 +183,43 @@ export interface Subtask {
   completed: boolean;
   position: number;
   created_at: string;
+}
+
+export type ProspectStatus = 'new' | 'contacted' | 'negotiating' | 'converted' | 'lost';
+
+export interface Message {
+  id: string;
+  from_user_id: string;
+  to_user_id: string;
+  subject: string | null;
+  content: string;
+  read: boolean;
+  created_at: string;
+  sender?: User;
+}
+
+export interface Prospect {
+  id: string;
+  company_name: string;
+  contact_name: string | null;
+  email: string | null;
+  phone: string | null;
+  notes: string | null;
+  status: ProspectStatus;
+  assigned_to: string | null;
+  suggested_template_id: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProjectUpdate {
+  id: string;
+  project_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  user?: User;
 }
 
 // Metriche calcolate CRM
