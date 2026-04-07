@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
-import { useProject, useUpdateProject } from '@/hooks/useProjects';
+import { useProject, useUpdateProject, useDeleteProject } from '@/hooks/useProjects';
 import { useTasks, useUpdateTask, useCreateTask } from '@/hooks/useTasks';
 import { useClients } from '@/hooks/useClients';
 import { useUsers } from '@/hooks/useUsers';
@@ -39,6 +39,7 @@ export default function ProjectDetail() {
   const updateTask = useUpdateTask();
   const createTask = useCreateTask();
   const updateProject = useUpdateProject();
+  const deleteProject = useDeleteProject();
   const createUpdate = useCreateProjectUpdate();
 
   const [updateText, setUpdateText] = useState('');
@@ -127,9 +128,23 @@ export default function ProjectDetail() {
     <div>
       <Header title={project.name} />
       <div className="p-4 md:p-6 space-y-6">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/projects')} className="text-foreground/50 hover:text-foreground">
-          <ArrowLeft className="mr-2 h-4 w-4" /> Tutti i progetti
-        </Button>
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" size="sm" onClick={() => navigate('/projects')} className="text-foreground/50 hover:text-foreground">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Tutti i progetti
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-destructive border-destructive/30 hover:bg-destructive/10 gap-1.5"
+            onClick={() => {
+              if (window.confirm(`Eliminare il progetto "${project.name}"? Tutti i task associati verranno eliminati.`)) {
+                deleteProject.mutate(project.id, { onSuccess: () => navigate('/projects') });
+              }
+            }}
+          >
+            <Trash2 className="h-3.5 w-3.5" /> Elimina Progetto
+          </Button>
+        </div>
 
         {/* Header card */}
         <div className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-5 md:p-7">

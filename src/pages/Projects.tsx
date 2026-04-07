@@ -65,11 +65,12 @@ function DroppableColumn({ id, children }: { id: string; children: React.ReactNo
 }
 
 // ── Draggable Project Card ──
-function DraggableProjectCard({ project, tasks, clients, onNavigate }: {
+function DraggableProjectCard({ project, tasks, clients, onNavigate, onDelete }: {
   project: Project;
   tasks: { project_id: string; status: string }[];
   clients: { id: string; company_name: string }[];
   onNavigate: () => void;
+  onDelete?: () => void;
 }) {
   const client = clients.find(c => c.id === project.client_id);
   const projectTasks = tasks.filter(t => t.project_id === project.id);
@@ -106,7 +107,13 @@ function DraggableProjectCard({ project, tasks, clients, onNavigate }: {
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1">
             <h4 className="text-sm font-semibold truncate">{project.name}</h4>
-            <div className={`h-2 w-2 rounded-full shrink-0 ${priorityDotColors[project.priority]}`} />
+            <div className="flex items-center gap-1 shrink-0">
+              <div className={`h-2 w-2 rounded-full ${priorityDotColors[project.priority]}`} />
+              <DropdownMenu trigger={<button className="p-0.5 rounded-lg hover:bg-muted transition-colors opacity-0 group-hover:opacity-100" onClick={e => e.stopPropagation()}><MoreVertical className="h-3 w-3 text-muted-foreground" /></button>}>
+                <DropdownItem onClick={onNavigate}><Pencil className="h-3.5 w-3.5" /> Dettaglio</DropdownItem>
+                {onDelete && <DropdownItem variant="danger" onClick={onDelete}><Trash2 className="h-3.5 w-3.5" /> Elimina</DropdownItem>}
+              </DropdownMenu>
+            </div>
           </div>
           {client && <p className="text-[11px] text-muted-foreground truncate mb-2">{client.company_name}</p>}
           {projectTasks.length > 0 && (
@@ -338,6 +345,9 @@ export default function Projects() {
                               tasks={tasks}
                               clients={clients}
                               onNavigate={() => navigate(`/projects/${project.id}`)}
+                              onDelete={() => {
+                                if (window.confirm(`Eliminare "${project.name}"?`)) deleteProject.mutate(project.id);
+                              }}
                             />
                           ))}
                         </div>
