@@ -75,10 +75,18 @@ export function ProjectForm({ open, onOpenChange, onSave }: ProjectFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(
-      { ...form, budget: form.budget ? parseFloat(form.budget) : undefined } as Partial<Project>,
-      taskPreview.length > 0 ? taskPreview : undefined,
-    );
+    if (!form.name.trim() || !form.client_id) return;
+    const cleaned: Partial<Project> = {
+      name: form.name.trim(),
+      client_id: form.client_id,
+      status: form.status as Project['status'],
+      priority: form.priority as Project['priority'],
+      ...(form.description ? { description: form.description } : {}),
+      ...(form.start_date ? { start_date: form.start_date } : {}),
+      ...(form.end_date ? { end_date: form.end_date } : {}),
+      ...(form.budget ? { budget: parseFloat(form.budget) } : {}),
+    };
+    onSave(cleaned, taskPreview.length > 0 ? taskPreview : undefined);
     setForm({ ...emptyForm });
     setSelectedTemplate('');
     setTaskPreview([]);

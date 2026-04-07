@@ -167,7 +167,7 @@ export default function Team() {
               >
                 {/* Admin actions */}
                 {isAdmin && (
-                  <div className="absolute top-4 right-4 flex gap-1">
+                  <div className="absolute top-3 right-3 flex items-center gap-1">
                     <button
                       type="button"
                       onClick={() => openEditModal(user)}
@@ -183,15 +183,15 @@ export default function Team() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="text-destructive border-destructive/30 hover:bg-destructive/10 text-[10px] h-6 px-2"
+                              className="text-destructive border-destructive/30 hover:bg-destructive/10 text-[10px] h-6 px-1.5"
                               onClick={() => { deactivateUser.mutate(user.id); setConfirmDelete(null); }}
                             >
-                              Conferma
+                              Sì
                             </Button>
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="text-[10px] h-6 px-2"
+                              className="text-[10px] h-6 px-1.5"
                               onClick={() => setConfirmDelete(null)}
                             >
                               No

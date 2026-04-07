@@ -55,7 +55,7 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-20 bg-background/90 backdrop-blur-xl px-4 md:px-6 py-3 md:py-4">
+    <header className="bg-background/90 backdrop-blur-xl px-4 md:px-6 py-3 md:py-4">
       {/* Mobile search overlay */}
       {mobileSearchOpen && (
         <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl p-4 pt-20 md:hidden">
@@ -93,10 +93,10 @@ export function Header({ title, onQuickAdd, quickAddLabel }: HeaderProps) {
             <Button
               size="sm"
               onClick={onQuickAdd}
-              className="gap-1.5 h-10 px-3 md:px-4"
+              className="gap-1.5 h-9 w-9 md:h-10 md:w-auto px-0 md:px-4 rounded-full md:rounded-xl"
             >
               <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline text-sm">{quickAddLabel || 'Nuovo'}</span>
+              <span className="hidden md:inline text-sm">{quickAddLabel || 'Nuovo'}</span>
             </Button>
           )}
 

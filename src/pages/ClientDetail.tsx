@@ -107,27 +107,27 @@ export default function ClientDetail() {
         </Button>
 
         {/* Header Cliente */}
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-muted">
-              <Building2 className="h-8 w-8 text-muted-foreground" />
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div className="flex items-start gap-3 md:gap-4 min-w-0">
+            <div className="flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-xl bg-muted shrink-0">
+              <Building2 className="h-6 w-6 md:h-8 md:w-8 text-muted-foreground" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-bold">{client.company_name}</h2>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-lg md:text-2xl font-bold truncate">{client.company_name}</h2>
                 <Badge className={statusColors[client.status]}>{statusLabels[client.status]}</Badge>
               </div>
-              <p className="text-muted-foreground">{client.contact_name} | {client.industry}</p>
-              {assignee && <p className="text-sm text-muted-foreground">Gestito da: {assignee.full_name}</p>}
+              <p className="text-sm md:text-base text-muted-foreground truncate">{client.contact_name} | {client.industry}</p>
+              {assignee && <p className="text-xs md:text-sm text-muted-foreground">Gestito da: {assignee.full_name}</p>}
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={openEdit} className="gap-2">
+          <Button variant="outline" size="sm" onClick={openEdit} className="gap-2 shrink-0 self-start">
             <Pencil className="h-4 w-4" /> Modifica
           </Button>
         </div>
 
         {/* Metriche KPI */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
           <Card>
             <CardContent className="p-4 text-center">
               <Euro className="h-5 w-5 mx-auto mb-1 text-primary" />

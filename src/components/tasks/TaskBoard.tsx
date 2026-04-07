@@ -189,7 +189,7 @@ export function TaskBoard({ tasks, onStatusChange, onUpdateTask }: TaskBoardProp
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-3 md:gap-4 overflow-x-auto pb-2 snap-x">
+        <div className="flex gap-3 md:gap-4 overflow-x-auto pb-2 snap-x scrollbar-none">
           {columns.map(col => {
             const columnTasks = tasks
               .filter(t => t.status === col.status)

@@ -50,7 +50,11 @@ export function ClientForm({ open, onOpenChange, onSave, client }: ClientFormPro
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(form);
+    // Strip empty strings → send only non-empty values
+    const cleaned = Object.fromEntries(
+      Object.entries(form).filter(([, v]) => v !== '')
+    ) as Partial<Client>;
+    onSave(cleaned);
     onOpenChange(false);
   };
 

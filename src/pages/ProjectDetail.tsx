@@ -129,8 +129,8 @@ export default function ProjectDetail() {
       <Header title={project.name} />
       <div className="p-4 md:p-6 space-y-6">
         <div className="flex items-center justify-between">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/projects')} className="text-foreground/50 hover:text-foreground">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Tutti i progetti
+          <Button variant="ghost" size="sm" onClick={() => navigate('/projects')} className="text-foreground/50 hover:text-foreground gap-1.5">
+            <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">Tutti i progetti</span><span className="sm:hidden">Indietro</span>
           </Button>
           <Button
             variant="outline"
@@ -142,21 +142,21 @@ export default function ProjectDetail() {
               }
             }}
           >
-            <Trash2 className="h-3.5 w-3.5" /> Elimina Progetto
+            <Trash2 className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Elimina Progetto</span><span className="sm:hidden">Elimina</span>
           </Button>
         </div>
 
         {/* Header card */}
         <div className="rounded-[28px] bg-card text-card-foreground shadow-soft border-0 p-5 md:p-7">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-muted">
-              <FolderKanban className="h-7 w-7 text-muted-foreground" />
+          <div className="flex items-start gap-3 md:gap-4 mb-4">
+            <div className="flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-xl bg-muted shrink-0">
+              <FolderKanban className="h-5 w-5 md:h-7 md:w-7 text-muted-foreground" />
             </div>
-            <div>
-              <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-bold text-card-foreground">{project.name}</h2>
-                <span className="text-xs text-muted-foreground bg-muted rounded-full px-2.5 py-0.5">{statusLabels[project.status]}</span>
-                <span className="text-xs text-muted-foreground bg-muted/50 rounded-full px-2.5 py-0.5">{priorityLabels[project.priority]}</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                <h2 className="text-lg md:text-2xl font-bold text-card-foreground truncate">{project.name}</h2>
+                <span className="text-[10px] md:text-xs text-muted-foreground bg-muted rounded-full px-2 md:px-2.5 py-0.5">{statusLabels[project.status]}</span>
+                <span className="text-[10px] md:text-xs text-muted-foreground bg-muted/50 rounded-full px-2 md:px-2.5 py-0.5">{priorityLabels[project.priority]}</span>
               </div>
               {client && (
                 <p className="text-muted-foreground cursor-pointer hover:text-card-foreground/60 transition-colors" onClick={() => navigate(`/clients/${client.id}`)}>
@@ -238,17 +238,19 @@ export default function ProjectDetail() {
           <h3 className="text-base font-semibold mb-3 flex items-center gap-2">
             <Plus className="h-5 w-5 text-muted-foreground" /> Aggiungi Task
           </h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-2">
             <Input
               value={newTaskTitle}
               onChange={e => setNewTaskTitle(e.target.value)}
               placeholder="Titolo task..."
-              className="flex-1 min-w-[200px]"
+              className="flex-1 min-w-0 sm:min-w-[200px]"
               onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddTask())}
             />
-            <Select options={priorityOptions} value={newTaskPriority} onChange={e => setNewTaskPriority(e.target.value)} className="w-32" />
-            <Select options={userOptions} value={newTaskAssignee} onChange={e => setNewTaskAssignee(e.target.value)} className="w-48" />
-            <Button size="sm" onClick={handleAddTask} disabled={!newTaskTitle.trim()} className="gap-1.5 h-11">
+            <div className="flex gap-2">
+              <Select options={priorityOptions} value={newTaskPriority} onChange={e => setNewTaskPriority(e.target.value)} className="flex-1 sm:w-32" />
+              <Select options={userOptions} value={newTaskAssignee} onChange={e => setNewTaskAssignee(e.target.value)} className="flex-1 sm:w-48" />
+            </div>
+            <Button size="sm" onClick={handleAddTask} disabled={!newTaskTitle.trim()} className="gap-1.5 h-11 w-full sm:w-auto">
               <Plus className="h-4 w-4" /> Aggiungi
             </Button>
           </div>

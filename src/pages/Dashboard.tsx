@@ -102,15 +102,15 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions - horizontal scroll on mobile */}
-        <div className="flex gap-2 overflow-x-auto pb-1 snap-x -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap">
-          <Button onClick={() => navigate('/clients/new')} className="gap-2 shrink-0 snap-start">
-            <Plus className="h-4 w-4" /> Nuovo Cliente
+        <div className="flex gap-2 overflow-x-auto pb-1 snap-x -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap scrollbar-none">
+          <Button onClick={() => navigate('/clients/new')} size="sm" className="gap-1.5 shrink-0 snap-start text-xs md:text-sm h-9 md:h-11 px-3 md:px-5">
+            <Plus className="h-3.5 w-3.5" /> Nuovo Cliente
           </Button>
-          <Button variant="outline" onClick={() => navigate('/projects/new')} className="gap-2 shrink-0 snap-start">
-            <Plus className="h-4 w-4" /> Nuovo Progetto
+          <Button variant="outline" onClick={() => navigate('/projects/new')} size="sm" className="gap-1.5 shrink-0 snap-start text-xs md:text-sm h-9 md:h-11 px-3 md:px-5">
+            <Plus className="h-3.5 w-3.5" /> Nuovo Progetto
           </Button>
-          <Button variant="outline" onClick={() => setIdeaOpen(true)} className="gap-2 shrink-0 snap-start">
-            <Lightbulb className="h-4 w-4" /> Nuova Idea
+          <Button variant="outline" onClick={() => setIdeaOpen(true)} size="sm" className="gap-1.5 shrink-0 snap-start text-xs md:text-sm h-9 md:h-11 px-3 md:px-5">
+            <Lightbulb className="h-3.5 w-3.5" /> Nuova Idea
           </Button>
         </div>
 

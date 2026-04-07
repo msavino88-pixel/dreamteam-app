@@ -50,7 +50,7 @@ export function AppLayout() {
         </div>
 
         {/* Page content */}
-        <main className="pb-6">
+        <main className="pb-6 pb-safe">
           <Outlet />
         </main>
       </div>

@@ -321,7 +321,7 @@ export default function Projects() {
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
             >
-              <div className="flex gap-3 md:gap-4 overflow-x-auto pb-2 snap-x">
+              <div className="flex gap-3 md:gap-4 overflow-x-auto pb-2 snap-x scrollbar-none">
                 {statusColumns.map(col => {
                   const columnProjects = boardProjects.filter(p => p.status === col.status);
                   return (

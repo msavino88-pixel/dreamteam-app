@@ -56,18 +56,18 @@ export default function Ideas() {
         quickAddLabel="Nuova Idea"
       />
       <div className="p-4 md:p-6 space-y-4">
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2">
           <Select
             options={statusFilterOptions}
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="w-48"
+            className="flex-1 min-w-[140px] sm:flex-none sm:w-48"
           />
           <Select
             options={sortOptions}
             value={sort}
             onChange={e => setSort(e.target.value)}
-            className="w-40"
+            className="flex-1 min-w-[120px] sm:flex-none sm:w-40"
           />
         </div>
 
